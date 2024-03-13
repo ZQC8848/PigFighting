@@ -12,8 +12,18 @@ namespace NetcodePlus.Demo
         public float sync_refresh_rate = 0.05f;
         public float sync_threshold = 0.1f;
         public float sync_interpolate = 5f;
+        private int sync_jumpCount = 2;
+        public float firstFunc_timer = 0;
+        public float secondFunc_timer = 0;
 
+        private int currentJumpCount;
+        public int maxJumpCount = 2;
+        public LayerMask groundLayer;
+        public Weapons weapon;
+
+        private Transform weaponHandler;
         private Rigidbody2D rigid;
+        private Collider2D col;
         private SNetworkActions actions;
         private SuperGunPlayerState sync_state = new SuperGunPlayerState();
         private float refresh_timer = 0f;
@@ -22,14 +32,22 @@ namespace NetcodePlus.Demo
         {
             base.Awake();
             rigid = GetComponent<Rigidbody2D>();
+            col = GetComponent<Collider2D>();
             sync_state.position = transform.position;
+            weaponHandler = transform.Find("WeaponHandler");
         }
 
         protected override void OnSpawn()
         {
             base.OnSpawn();
             actions = new SNetworkActions(this);
+            actions.RegisterString("equip", DoEquipWeapon);
+            actions.Register("jump", DoJump);
+            actions.Register("func1", DoUseWeapon1stFunc);
+            actions.Register("func2", DoUseWeapon2ndFunc);
             actions.RegisterSerializable("sync", ReceiveSync, NetworkDelivery.Unreliable);
+
+            EquipWeapon("pistol");
         }
 
         protected override void OnDespawn()
@@ -42,6 +60,8 @@ namespace NetcodePlus.Demo
         {
             UpdateOwner();
             UpdateNotOwner();
+            firstFunc_timer += Time.deltaTime;
+            secondFunc_timer += Time.deltaTime;
         }
 
         private void UpdateOwner()
@@ -53,7 +73,9 @@ namespace NetcodePlus.Demo
             PlayerControl2D controls = PlayerControl2D.Get();
             Vector3 cmove = controls.GetMove();
             bool isJumpPressed = controls.IsPressJump();
-            Vector3 move = new Vector3(cmove.x*move_speed, rigid.velocity.y, 0);
+            bool isFunc1stPressed = controls.IsPress1stFunc();
+            bool isFunc2ndPressed = controls.IsPress2ndFunc();
+            Vector3 move = new Vector3(cmove.x * move_speed, rigid.velocity.y, 0);
 
             //Rotate controls to camera angle
             CameraPlayer cam = CameraPlayer.Get();
@@ -64,6 +86,8 @@ namespace NetcodePlus.Demo
             Turn(cmove.x);
             Move(move);
             Jump(isJumpPressed);
+            UseWeapon1stFunc(isFunc1stPressed);
+            UseWeapon2ndFunc(isFunc2ndPressed);
 
             //Refresh Timer
             refresh_timer += Time.deltaTime;
@@ -76,6 +100,10 @@ namespace NetcodePlus.Demo
             sync_state.position = transform.position;
             sync_state.move = move;
             sync_state.jump = isJumpPressed;
+            sync_state.useWeapon1st = isFunc1stPressed;
+            sync_state.useWeapon2nd = isFunc2ndPressed;
+
+            sync_jumpCount = currentJumpCount;
 
             actions?.Trigger("sync", sync_state); // ReceiveSync(sync_state)
         }
@@ -93,9 +121,13 @@ namespace NetcodePlus.Demo
             if (offset.magnitude > sync_threshold * 10f)
                 transform.position = sync_state.position; //Teleport if too far
 
-            Turn(sync_state.move.normalized.x);
+            currentJumpCount = sync_jumpCount;
+
+            Turn(sync_state.move.x);
             Move(sync_state.move);
             Jump(sync_state.jump);
+            UseWeapon1stFunc(sync_state.useWeapon1st);
+            UseWeapon2ndFunc(sync_state.useWeapon2nd);
         }
 
         private void Move(Vector3 dir)
@@ -106,13 +138,92 @@ namespace NetcodePlus.Demo
         {
             if (xVelocity != 0)
             {
-                transform.localScale=new Vector3(xVelocity,1,1);
+                if (xVelocity > 0)
+                {
+                    transform.localScale = new Vector3(1, 1, 1);
+                }
+                else
+                {
+                    transform.localScale = new Vector3(-1, 1, 1);
+                }
+
             }
         }
         private void Jump(bool isJumpPressed)
         {
-            if (isJumpPressed)
-                rigid.velocity = new Vector3(rigid.velocity.x, jump_force);
+            bool isOnGround = IsOnGroundCheck();
+
+            if (isOnGround)
+            {
+                currentJumpCount = maxJumpCount - 1;
+            }
+            if (isJumpPressed && isOnGround)
+            {
+                actions?.Trigger("jump");
+                currentJumpCount--;
+            }
+            else if (isJumpPressed && currentJumpCount > 0 && !isOnGround)
+            {
+                actions?.Trigger("jump");
+                currentJumpCount--;
+            }
+        }
+        private void DoJump()
+        {
+            rigid.velocity = new Vector3(rigid.velocity.x, jump_force);
+        }
+        private bool IsOnGroundCheck()
+        {
+            if (col.IsTouchingLayers(groundLayer))
+            {
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+        }
+        public void EquipWeapon(string weaponName)
+        {
+            actions?.Trigger("equip", weaponName);
+        }
+        private void DoEquipWeapon(string weaponName)
+        {
+            Weapons _weapon = WeaponsManager.Get().FindWeapon(weaponName);
+            if (_weapon != null)
+            {
+                if (weapon != null)
+                {
+                    weapon.Discard();
+                }
+                weapon = _weapon;
+                WeaponsManager.Get().InstantiateWeapon(weapon, weaponHandler);
+            }
+        }
+        public void UseWeapon1stFunc(bool isPressed)
+        {
+            if (isPressed && IsOwner && firstFunc_timer > weapon.firstFuncCoolTime)
+            {
+                actions?.Trigger("func1");
+            }
+        }
+        private void DoUseWeapon1stFunc()
+        {
+            weapon.FisrtFunc();
+            firstFunc_timer = 0;
+        }
+        public void UseWeapon2ndFunc(bool isPressed)
+        {
+            if (isPressed && IsOwner && secondFunc_timer > weapon.secondFuncCoolTime)
+            {
+                actions?.Trigger("func2");
+                secondFunc_timer = 0;
+            }
+        }
+
+        private void DoUseWeapon2ndFunc()
+        {
+            weapon.SecondFunc();
         }
         private void ReceiveSync(SerializedData sdata)
         {
@@ -135,6 +246,9 @@ namespace NetcodePlus.Demo
         public Vector3 move;
         public Vector3 scale;
         public bool jump;
+        public int jumpCount;
+        public bool useWeapon1st;
+        public bool useWeapon2nd;
 
         public void NetworkSerialize<T>(BufferSerializer<T> serializer) where T : IReaderWriter
         {
@@ -143,6 +257,7 @@ namespace NetcodePlus.Demo
             serializer.SerializeValue(ref move);
             serializer.SerializeValue(ref jump);
             serializer.SerializeValue(ref scale);
+            serializer.SerializeValue(ref jumpCount);
         }
     }
 }

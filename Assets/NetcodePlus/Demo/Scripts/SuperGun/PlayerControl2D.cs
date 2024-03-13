@@ -10,9 +10,11 @@ namespace NetcodePlus.Demo
 
     public class PlayerControl2D : MonoBehaviour
     {
-        [Header("Actions")]
-        public KeyCode action_key = KeyCode.LeftControl;
-        public KeyCode attack_key = KeyCode.LeftShift;
+        [Header("First Weapon Function")]
+        public KeyCode func1st_key = KeyCode.J;
+        [Header("Second Weapon Function")]
+        public KeyCode func2nd_key = KeyCode.K;
+        [Header("Jump")]
         public KeyCode jump_key = KeyCode.W;
 
         [Header("Camera")]
@@ -28,8 +30,8 @@ namespace NetcodePlus.Demo
         private float rotate_cam;
         private float mouse_scroll = 0f;
 
-        private bool press_action;
-        private bool press_attack;
+        private bool press_2ndfunc;
+        private bool press_1stfunc;
         private bool press_jump;
 
         private bool press_accept;
@@ -48,8 +50,8 @@ namespace NetcodePlus.Demo
         {
             move = Vector3.zero;
             rotate_cam = 0f;
-            press_action = false;
-            press_attack = false;
+            press_2ndfunc = false;
+            press_1stfunc = false;
             press_jump = false;
 
             press_accept = false;
@@ -66,10 +68,10 @@ namespace NetcodePlus.Demo
             if (Input.GetKey(cam_rotate_right))
                 rotate_cam += 1f;
 
-            if (Input.GetKeyDown(action_key))
-                press_action = true;
-            if (Input.GetKeyDown(attack_key))
-                press_attack = true;
+            if (Input.GetKeyDown(func2nd_key))
+                press_2ndfunc = true;
+            if (Input.GetKeyDown(func1st_key))
+                press_1stfunc = true;
             if (Input.GetKeyDown(jump_key))
                 press_jump = true;
 
@@ -89,8 +91,8 @@ namespace NetcodePlus.Demo
         public bool IsMoving() { return move.magnitude > 0.1f; }
         public float GetRotateCam() { return rotate_cam; }
 
-        public bool IsPressAttack() { return press_attack; }
-        public bool IsPressAction() { return press_action; }
+        public bool IsPress1stFunc() { return press_1stfunc; }
+        public bool IsPress2ndFunc() { return press_2ndfunc; }
         public bool IsPressJump() { return press_jump; }
 
         public bool IsPressMenuAccept() { return press_accept; }

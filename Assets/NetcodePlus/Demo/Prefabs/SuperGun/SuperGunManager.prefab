@@ -83,8 +83,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e85b2b642a8082043812a5e8f72d107c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  action_key: 306
-  attack_key: 304
+  action_key: 107
+  attack_key: 106
   jump_key: 119
   cam_rotate_left: 113
   cam_rotate_right: 101
