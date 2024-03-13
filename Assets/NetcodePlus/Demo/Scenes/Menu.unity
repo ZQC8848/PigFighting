@@ -4504,6 +4504,31 @@ MonoBehaviour:
   join_user: {fileID: 2124482107}
   join_host: {fileID: 1803926685}
   join_color: {fileID: 244921700}
+--- !u!1 &1215280987 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 8487147660888035130, guid: 23c63cb4e422e0e4fb2a3e2f9f9559ae, type: 3}
+  m_PrefabInstance: {fileID: 8274361774652240705}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &1215280993
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1215280987}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e85b2b642a8082043812a5e8f72d107c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  action_key: 306
+  attack_key: 304
+  jump_key: 119
+  cam_rotate_left: 113
+  cam_rotate_right: 101
+  menu_accept: 13
+  menu_cancel: 8
+  menu_pause: 27
 --- !u!1 &1261294927
 GameObject:
   m_ObjectHideFlags: 0
@@ -8020,7 +8045,10 @@ PrefabInstance:
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 8487147660888035130, guid: 23c63cb4e422e0e4fb2a3e2f9f9559ae, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 1215280993}
   m_SourcePrefab: {fileID: 100100000, guid: 23c63cb4e422e0e4fb2a3e2f9f9559ae, type: 3}
 --- !u!1660057539 &9223372036854775807
 SceneRoots:

@@ -8,11 +8,12 @@ namespace NetcodePlus.Demo
     public class SuperGunPlayer : SNetworkPlayer
     {
         public float move_speed = 2f;
+        public float jump_force = 10f;
         public float sync_refresh_rate = 0.05f;
         public float sync_threshold = 0.1f;
         public float sync_interpolate = 5f;
 
-        private Rigidbody rigid;
+        private Rigidbody2D rigid;
         private SNetworkActions actions;
         private SuperGunPlayerState sync_state = new SuperGunPlayerState();
         private float refresh_timer = 0f;
@@ -20,7 +21,7 @@ namespace NetcodePlus.Demo
         protected override void Awake()
         {
             base.Awake();
-            rigid = GetComponent<Rigidbody>();
+            rigid = GetComponent<Rigidbody2D>();
             sync_state.position = transform.position;
         }
 
@@ -51,7 +52,8 @@ namespace NetcodePlus.Demo
             //Get Key Controls
             PlayerControl2D controls = PlayerControl2D.Get();
             Vector3 cmove = controls.GetMove();
-            Vector3 move = new Vector3(cmove.x, 0f, cmove.y) * move_speed;
+            bool isJumpPressed = controls.IsPressJump();
+            Vector3 move = new Vector3(cmove.x*move_speed, rigid.velocity.y, 0);
 
             //Rotate controls to camera angle
             CameraPlayer cam = CameraPlayer.Get();
@@ -59,7 +61,9 @@ namespace NetcodePlus.Demo
                 move = cam.GetFacingRotation() * move;
 
             //Move
+            Turn(cmove.x);
             Move(move);
+            Jump(isJumpPressed);
 
             //Refresh Timer
             refresh_timer += Time.deltaTime;
@@ -71,6 +75,7 @@ namespace NetcodePlus.Demo
             sync_state.timing = sync_state.timing + 1;
             sync_state.position = transform.position;
             sync_state.move = move;
+            sync_state.jump = isJumpPressed;
 
             actions?.Trigger("sync", sync_state); // ReceiveSync(sync_state)
         }
@@ -88,14 +93,27 @@ namespace NetcodePlus.Demo
             if (offset.magnitude > sync_threshold * 10f)
                 transform.position = sync_state.position; //Teleport if too far
 
+            Turn(sync_state.move.normalized.x);
             Move(sync_state.move);
+            Jump(sync_state.jump);
         }
 
         private void Move(Vector3 dir)
         {
             rigid.velocity = dir;
         }
-
+        private void Turn(float xVelocity)
+        {
+            if (xVelocity != 0)
+            {
+                transform.localScale=new Vector3(xVelocity,1,1);
+            }
+        }
+        private void Jump(bool isJumpPressed)
+        {
+            if (isJumpPressed)
+                rigid.velocity = new Vector3(rigid.velocity.x, jump_force);
+        }
         private void ReceiveSync(SerializedData sdata)
         {
             if (IsOwner)
@@ -115,12 +133,16 @@ namespace NetcodePlus.Demo
         public ulong timing; //Increased by 1 each frame
         public Vector3 position;
         public Vector3 move;
+        public Vector3 scale;
+        public bool jump;
 
         public void NetworkSerialize<T>(BufferSerializer<T> serializer) where T : IReaderWriter
         {
             serializer.SerializeValue(ref timing);
             serializer.SerializeValue(ref position);
             serializer.SerializeValue(ref move);
+            serializer.SerializeValue(ref jump);
+            serializer.SerializeValue(ref scale);
         }
     }
 }

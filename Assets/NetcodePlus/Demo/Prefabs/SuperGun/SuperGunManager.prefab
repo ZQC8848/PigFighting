@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 2321272014673700294}
   - component: {fileID: 6419621661028690615}
   - component: {fileID: 5521425746638591857}
-  - component: {fileID: -5173730406684954175}
+  - component: {fileID: -6658358798563523194}
   m_Layer: 0
   m_Name: SuperGunManager
   m_TagString: Untagged
@@ -71,7 +71,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 961fa57ae95d84d4ab656946941ae84b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
---- !u!114 &-5173730406684954175
+--- !u!114 &-6658358798563523194
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -80,12 +80,12 @@ MonoBehaviour:
   m_GameObject: {fileID: 6816663516709778565}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 1a1f8308df884f8469441ef5465d3ec0, type: 3}
+  m_Script: {fileID: 11500000, guid: e85b2b642a8082043812a5e8f72d107c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  action_key: 32
+  action_key: 306
   attack_key: 304
-  jump_key: 306
+  jump_key: 119
   cam_rotate_left: 113
   cam_rotate_right: 101
   menu_accept: 13
