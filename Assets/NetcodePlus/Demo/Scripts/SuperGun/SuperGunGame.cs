@@ -1,0 +1,24 @@
+using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+
+namespace NetcodePlus.Demo
+{
+    public class SuperGunGame : SMonoBehaviour
+    {
+        protected override void Awake()
+        {
+            base.Awake();
+
+            if (!TheNetwork.Get().IsActive())
+            {
+                //Start in test mode, when running directly from Unity Scene
+                Authenticator.Get().LoginTest("Player"); //May not work with more advanced auth system, works in Test mode
+                DemoConnectData cdata = new DemoConnectData(GameMode.SuperGun);
+                TheNetwork.Get().SetConnectionExtraData(cdata);
+                TheNetwork.Get().StartHost(NetworkData.Get().game_port);
+            }
+        }
+    }
+}
+
