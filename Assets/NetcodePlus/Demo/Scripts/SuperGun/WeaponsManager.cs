@@ -26,9 +26,10 @@ public class WeaponsManager : MonoBehaviour
     {
         InstantiateWeapon(FindWeapon(weaponName),transform);
     }
-    public void InstantiateWeapon(Weapons weapon,Transform transform)
+    public GameObject InstantiateWeapon(Weapons weapon,Transform transform)
     {
-        Instantiate(weapon.weaponGameobject,transform.position,transform.rotation,transform);
+        GameObject obj = Instantiate(weapon.weaponGameObject,transform.position,transform.rotation,transform);
+        return obj;
     }
     public static WeaponsManager Get()
     {

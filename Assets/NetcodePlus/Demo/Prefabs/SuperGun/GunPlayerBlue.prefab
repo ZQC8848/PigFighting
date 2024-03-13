@@ -177,6 +177,9 @@ MonoBehaviour:
   sync_refresh_rate: 0.05
   sync_threshold: 0.1
   sync_interpolate: 5
+  firstFunc_timer: 0
+  secondFunc_timer: 0
+  sync_face: 0
   maxJumpCount: 2
   groundLayer:
     serializedVersion: 2

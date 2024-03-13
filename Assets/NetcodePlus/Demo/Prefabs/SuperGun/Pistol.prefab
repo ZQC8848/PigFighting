@@ -168,6 +168,37 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
+--- !u!1 &1300951510664480434
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 6706505429580904946}
+  m_Layer: 0
+  m_Name: FirePoint
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &6706505429580904946
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1300951510664480434}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0.766, y: -0.063, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 2784135547512772333}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &5030293176370450137
 GameObject:
   m_ObjectHideFlags: 0
@@ -194,12 +225,13 @@ Transform:
   m_GameObject: {fileID: 5030293176370450137}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -6.9828024, y: 2.475309, z: -0.20070846}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 8971068312935123201}
   - {fileID: 7575966496807697913}
+  - {fileID: 6706505429580904946}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &3530205635014629522
@@ -215,11 +247,18 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   weaponsName: pistol
-  weaponCount: 3000
+  firstFuncCoolTime: 1
+  secondFuncCoolTime: 0.5
+  weaponGameObject: {fileID: 5030293176370450137}
+  gunFacing: 1
+  redBullet: {fileID: 1388074884096637546, guid: e8b5ef275952ace4fad3565010320999, type: 3}
+  greenBullet: {fileID: 218605452464407985, guid: 6a54e97d03f81da4a9cf48fdb0a62fa6, type: 3}
   firePoint: {fileID: 0}
-  currentWeaponCount: 0
-  weaponGameobject: {fileID: 5030293176370450137}
-  firstFuncCoolTime: 10
-  secondFuncCoolTime: 5
-  currentFirstFuncCoolTime: 0
-  currentSecondFuncCoolTime: 0
+  bulletPool: {fileID: 0}
+  handler: {fileID: 0}
+  weaponCount: 3000
+  redBulletSpeed: 20
+  greenBulletSpeed: 20
+  redBulletDamage: 1
+  greenBulletDamage: 1
+  playerId: 0

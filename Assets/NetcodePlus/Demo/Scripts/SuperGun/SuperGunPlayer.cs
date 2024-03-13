@@ -15,6 +15,7 @@ namespace NetcodePlus.Demo
         private int sync_jumpCount = 2;
         public float firstFunc_timer = 0;
         public float secondFunc_timer = 0;
+        public int sync_face;
 
         private int currentJumpCount;
         public int maxJumpCount = 2;
@@ -47,7 +48,7 @@ namespace NetcodePlus.Demo
             actions.Register("func2", DoUseWeapon2ndFunc);
             actions.RegisterSerializable("sync", ReceiveSync, NetworkDelivery.Unreliable);
 
-            EquipWeapon("pistol");
+
         }
 
         protected override void OnDespawn()
@@ -62,12 +63,21 @@ namespace NetcodePlus.Demo
             UpdateNotOwner();
             firstFunc_timer += Time.deltaTime;
             secondFunc_timer += Time.deltaTime;
+            if (Input.GetKeyDown(KeyCode.T))
+            {
+                Debug.Log(weaponHandler.transform.position);
+            }
         }
 
         private void UpdateOwner()
         {
             if (!IsOwner)
                 return;
+
+            if (weapon == null)
+            {
+                EquipWeapon("pistol");
+            }
 
             //Get Key Controls
             PlayerControl2D controls = PlayerControl2D.Get();
@@ -113,6 +123,11 @@ namespace NetcodePlus.Demo
             if (IsOwner)
                 return;
 
+            if (weapon == null)
+            {
+                EquipWeapon("pistol");
+            }
+
             Vector3 offset = sync_state.position - transform.position; //Is the character position out of sync?
 
             if (offset.magnitude > sync_threshold)
@@ -141,10 +156,12 @@ namespace NetcodePlus.Demo
                 if (xVelocity > 0)
                 {
                     transform.localScale = new Vector3(1, 1, 1);
+                    weapon.SetGunFacing(1);
                 }
                 else
                 {
                     transform.localScale = new Vector3(-1, 1, 1);
+                    weapon.SetGunFacing(-1);
                 }
 
             }
@@ -197,7 +214,8 @@ namespace NetcodePlus.Demo
                     weapon.Discard();
                 }
                 weapon = _weapon;
-                WeaponsManager.Get().InstantiateWeapon(weapon, weaponHandler);
+                weapon = WeaponsManager.Get().InstantiateWeapon(weapon, weaponHandler).GetComponent<Weapons>();
+                weapon.SetFirePointOringin(weaponHandler);
             }
         }
         public void UseWeapon1stFunc(bool isPressed)
@@ -218,6 +236,18 @@ namespace NetcodePlus.Demo
             {
                 actions?.Trigger("func2");
                 secondFunc_timer = 0;
+            }
+        }
+
+        public int GetUserFacing()
+        {
+            if (this.transform.localScale.x > 0)
+            {
+                return 1;
+            }
+            else
+            {
+                return -1;
             }
         }
 
