@@ -255,10 +255,13 @@ MonoBehaviour:
   greenBullet: {fileID: 218605452464407985, guid: 6a54e97d03f81da4a9cf48fdb0a62fa6, type: 3}
   firePoint: {fileID: 0}
   bulletPool: {fileID: 0}
-  handler: {fileID: 0}
   weaponCount: 3000
   redBulletSpeed: 20
   greenBulletSpeed: 20
   redBulletDamage: 1
   greenBulletDamage: 1
+  redBulletImpactForce: 50
+  greenBulletImpactForce: 30
+  recoil: 10
   playerId: 0
+  gunPlayer: {fileID: 0}

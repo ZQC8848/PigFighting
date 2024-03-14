@@ -28,7 +28,7 @@ namespace NetcodePlus
             {
                 float angle = Random.Range(0f, 360f) * Mathf.Deg2Rad;
                 float rad = Random.Range(0f, radius);
-                Vector3 offset = new Vector3(Mathf.Cos(angle), 0f, Mathf.Sin(angle)) * rad;
+                Vector3 offset = new Vector3(Mathf.Cos(angle), Mathf.Sin(angle), 0f) * rad;
                 return transform.position + offset;
             }
             return transform.position;

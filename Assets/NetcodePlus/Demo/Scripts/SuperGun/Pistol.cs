@@ -5,16 +5,18 @@ using UnityEngine;
 
 public class Pistol : Weapons
 {
-    public int gunFacing;
+    private int gunFacing;
 
+    [Header("Bullet Prefab")]
     public GameObject redBullet;
     public GameObject greenBullet;
 
+    [Header("Bullet Count")]
+    public int weaponCount;
+
+    [Header("Inite Bullet Parameter")]
     public Transform firePoint;
     public Transform bulletPool;
-    public Transform handler;
-
-    public int weaponCount;
 
     public float redBulletSpeed;
     public float greenBulletSpeed;
@@ -22,22 +24,30 @@ public class Pistol : Weapons
     public float redBulletDamage;
     public float greenBulletDamage;
 
+    public float redBulletImpactForce;
+    public float greenBulletImpactForce;
+
+    [Header("Recoil Force")]
+    public float recoil;
+
+    [Header("Player Id")]
     public int playerId;
+
+    public SuperGunPlayer gunPlayer;
     private void Start()
     {
         firePoint = transform.Find("FirePoint");
         bulletPool = GameObject.Find("BulletsPool").transform;
+        gunPlayer = transform.parent.parent.GetComponent<SuperGunPlayer>();
     }
     public override void FisrtFunc()
     {
         ShootRedBullet();
-        Debug.Log("use pistol 1st func");
     }
 
     public override void SecondFunc()
     {
         ShootGreenBullet();
-        Debug.Log("use pistol 2nd func");
     }
 
     void ShootRedBullet()
@@ -46,7 +56,11 @@ public class Pistol : Weapons
         Rigidbody2D rb = bullet.GetComponent<Rigidbody2D>();
         rb.velocity = GetBulletDir() * redBulletSpeed;
 
-        bullet.GetComponent<GunBullet>().SetDamage(redBulletDamage);
+        GunBullet _bullet = bullet.GetComponent<GunBullet>();
+        _bullet.SetDamage(redBulletDamage);
+        _bullet.SetImpactForce(redBulletImpactForce*GetBulletDir());
+
+        AddRecoil();
     }
 
     void ShootGreenBullet()
@@ -56,12 +70,23 @@ public class Pistol : Weapons
         Rigidbody2D rb = bullet.GetComponent<Rigidbody2D>();
         rb.velocity = GetBulletDir() * greenBulletSpeed;
 
-        bullet.GetComponent<GunBullet>().SetDamage(greenBulletDamage);
+        GunBullet _bullet = bullet.GetComponent<GunBullet>();
+        _bullet.SetDamage(greenBulletDamage);
+        _bullet.SetImpactForce(greenBulletImpactForce*GetBulletDir());
+
+        AddRecoil();
     }
 
     public override void SetGunFacing(int i)
     {
         gunFacing = i;
+    }
+
+    private void AddRecoil()
+    {
+        Vector3 forceDir = -GetBulletDir();
+
+        gunPlayer.SetForce(forceDir * recoil);
     }
 
     public Vector3 GetBulletDir()
@@ -77,9 +102,5 @@ public class Pistol : Weapons
             diraction = transform.right;
         }
         return diraction;
-    }
-    public override void SetFirePointOringin(Transform _handleTransform)
-    {
-        handler = _handleTransform;
     }
 }

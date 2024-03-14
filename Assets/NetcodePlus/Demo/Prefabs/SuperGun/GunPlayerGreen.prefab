@@ -14,7 +14,7 @@ GameObject:
   - component: {fileID: -8515670509798261620}
   - component: {fileID: 4027931938775553729}
   - component: {fileID: 2957964787691658966}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: GunPlayerGreen
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -143,10 +143,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   move_speed: 10
   jump_force: 10
-  sync_refresh_rate: 0.05
-  sync_threshold: 0.1
-  sync_interpolate: 5
   maxJumpCount: 2
+  hp_max: 100
+  firstFunc_timer: 0
+  secondFunc_timer: 0
   groundLayer:
     serializedVersion: 2
     m_Bits: 64
@@ -161,7 +161,7 @@ GameObject:
   m_Component:
   - component: {fileID: 2937871754056863478}
   - component: {fileID: 5530284477271693966}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: Square
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -245,7 +245,7 @@ GameObject:
   m_Component:
   - component: {fileID: 227234486587893947}
   - component: {fileID: 2095986161479853284}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: Capsule
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -328,7 +328,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 5398774418525177647}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: WeaponHandler
   m_TagString: Untagged
   m_Icon: {fileID: 0}

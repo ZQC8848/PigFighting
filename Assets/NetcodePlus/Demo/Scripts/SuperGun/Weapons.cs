@@ -4,9 +4,8 @@ using UnityEngine;
 
 public abstract class Weapons : MonoBehaviour
 {
+    [Header("Weapon Parameter")]
     public string weaponsName;
-
-
 
     public float firstFuncCoolTime;
     public float secondFuncCoolTime;
@@ -18,7 +17,6 @@ public abstract class Weapons : MonoBehaviour
 
     public abstract void SetGunFacing(int i);
 
-    public abstract void SetFirePointOringin(Transform handleTransform);
     public void Discard()
     {
 

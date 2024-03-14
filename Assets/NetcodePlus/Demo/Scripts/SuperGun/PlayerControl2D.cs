@@ -16,6 +16,8 @@ namespace NetcodePlus.Demo
         public KeyCode func2nd_key = KeyCode.K;
         [Header("Jump")]
         public KeyCode jump_key = KeyCode.W;
+        [Header("Fall")]
+        public KeyCode fall_key = KeyCode.S;
 
         [Header("Camera")]
         public KeyCode cam_rotate_left = KeyCode.Q;
@@ -33,6 +35,7 @@ namespace NetcodePlus.Demo
         private bool press_2ndfunc;
         private bool press_1stfunc;
         private bool press_jump;
+        private bool press_fall;
 
         private bool press_accept;
         private bool press_cancel;
@@ -53,6 +56,7 @@ namespace NetcodePlus.Demo
             press_2ndfunc = false;
             press_1stfunc = false;
             press_jump = false;
+            press_fall = false;
 
             press_accept = false;
             press_cancel = false;
@@ -74,6 +78,8 @@ namespace NetcodePlus.Demo
                 press_1stfunc = true;
             if (Input.GetKeyDown(jump_key))
                 press_jump = true;
+            if(Input.GetKeyDown(fall_key))
+                press_fall = true;
 
             if (Input.GetKeyDown(menu_accept))
                 press_accept = true;
@@ -94,6 +100,8 @@ namespace NetcodePlus.Demo
         public bool IsPress1stFunc() { return press_1stfunc; }
         public bool IsPress2ndFunc() { return press_2ndfunc; }
         public bool IsPressJump() { return press_jump; }
+
+        public bool IsPressFall() {  return press_fall; }
 
         public bool IsPressMenuAccept() { return press_accept; }
         public bool IsPressMenuCancel() { return press_cancel; }
