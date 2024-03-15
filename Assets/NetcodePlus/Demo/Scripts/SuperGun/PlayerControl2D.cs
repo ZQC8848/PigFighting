@@ -1,3 +1,4 @@
+using Suriyun.MCS;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -28,6 +29,15 @@ namespace NetcodePlus.Demo
         public KeyCode menu_cancel = KeyCode.Backspace;
         public KeyCode menu_pause = KeyCode.Escape;
 
+        [Header("Android Iput")]
+        public bool adRightMove;
+        public bool adLeftMove;
+        public bool adJump;
+        public bool adFall;
+        public bool adAttack;
+        public bool adSkill;
+        public bool adRush;
+
         private Vector3 move;
         private float rotate_cam;
         private float mouse_scroll = 0f;
@@ -49,8 +59,10 @@ namespace NetcodePlus.Demo
                 instance = this;
         }
 
+
         void Update()
         {
+
             move = Vector3.zero;
             rotate_cam = 0f;
             press_2ndfunc = false;
@@ -62,24 +74,38 @@ namespace NetcodePlus.Demo
             press_cancel = false;
 
             Vector3 wasd = Vector3.zero;
-            if (Input.GetKey(KeyCode.A))
+
+            if (Input.GetKey(KeyCode.A)||adLeftMove)
+            {
                 wasd -= Vector3.right;
-            if (Input.GetKey(KeyCode.D))
+                adLeftMove = false;
+            }
+                
+            if (Input.GetKey(KeyCode.D)||adRightMove)
+            {
                 wasd += Vector3.right;
+                adRightMove = false;
+            }
 
             if (Input.GetKey(cam_rotate_left))
                 rotate_cam += -1f;
             if (Input.GetKey(cam_rotate_right))
                 rotate_cam += 1f;
 
-            if (Input.GetKeyDown(func2nd_key))
+            if (Input.GetKey(func2nd_key)||adSkill)
                 press_2ndfunc = true;
-            if (Input.GetKeyDown(func1st_key))
+            if (Input.GetKey(func1st_key)||adAttack)
                 press_1stfunc = true;
-            if (Input.GetKeyDown(jump_key))
+            if (Input.GetKeyDown(jump_key)||adJump)
+            {
                 press_jump = true;
-            if(Input.GetKeyDown(fall_key))
+                //adJump = false;
+            }
+            if (Input.GetKeyDown(fall_key)||adFall)   
+            {
                 press_fall = true;
+                //adFall = false;
+            }
 
             if (Input.GetKeyDown(menu_accept))
                 press_accept = true;
@@ -88,11 +114,15 @@ namespace NetcodePlus.Demo
             if (Input.GetKeyDown(menu_pause))
                 press_pause = true;
 
+
             move = wasd;
             move = move.normalized * Mathf.Min(move.magnitude, 1f);
             mouse_scroll = Input.mouseScrollDelta.y;
         }
-
+        public void SetJumpDown()
+        {
+            press_jump = true;
+        }
         public Vector3 GetMove() { return move; }
         public bool IsMoving() { return move.magnitude > 0.1f; }
         public float GetRotateCam() { return rotate_cam; }
@@ -101,7 +131,7 @@ namespace NetcodePlus.Demo
         public bool IsPress2ndFunc() { return press_2ndfunc; }
         public bool IsPressJump() { return press_jump; }
 
-        public bool IsPressFall() {  return press_fall; }
+        public bool IsPressFall() { return press_fall; }
 
         public bool IsPressMenuAccept() { return press_accept; }
         public bool IsPressMenuCancel() { return press_cancel; }

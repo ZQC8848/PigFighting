@@ -12,6 +12,7 @@ namespace NetcodePlus.Demo
         public float jump_force = 10f;
         public int maxJumpCount = 2;
         public float hp_max = 100;
+        public float forceRecession = 1.5f;
 
         //[Header("Synchonization Parameters")]
         private float sync_refresh_rate = 0.05f;
@@ -27,11 +28,13 @@ namespace NetcodePlus.Demo
         public Weapons weapon;
         public PlatForm2D touchedGround;
 
+        public Camera playerCamera;
         private Vector3 playerForce;
         private float hp;
         private int sync_jumpCount = 2;
         private int currentJumpCount;
 
+        private PlayerControl2D controls;
         private Transform weaponHandler;
         private Rigidbody2D rigid;
         private Collider2D col;
@@ -47,6 +50,7 @@ namespace NetcodePlus.Demo
             sync_state.position = transform.position;
             hp = hp_max;
             weaponHandler = transform.Find("WeaponHandler");
+            playerCamera = GetComponentInChildren<Camera>();
         }
 
         protected override void OnSpawn()
@@ -67,6 +71,13 @@ namespace NetcodePlus.Demo
         {
             base.OnDespawn();
             actions.Clear();
+        }
+        private void Start()
+        {
+            if(!IsOwner)
+            {
+                Destroy(playerCamera.gameObject);
+            }
         }
 
         protected virtual void Update()
@@ -92,7 +103,7 @@ namespace NetcodePlus.Demo
             }
 
             //Get Key Controls
-            PlayerControl2D controls = PlayerControl2D.Get();
+            controls = PlayerControl2D.Get();
             Vector3 cmove = controls.GetMove();
             bool isJumpPressed = controls.IsPressJump();
             bool isFunc1stPressed = controls.IsPress1stFunc();
@@ -191,14 +202,19 @@ namespace NetcodePlus.Demo
         }
         private void Jump(bool isJumpPressed)
         {
+            
             bool isOnGround = IsOnGroundCheck();
 
+            if (isJumpPressed)
+                controls.adJump = false;
+
             if (isOnGround)
-            {
+                //Debug.Log("onground");
                 currentJumpCount = maxJumpCount - 1;
-            }
+
             if (isJumpPressed && isOnGround)
             {
+                //Debug.Log("try to jump");
                 actions?.Trigger("jump");
                 currentJumpCount--;
             }
@@ -215,9 +231,12 @@ namespace NetcodePlus.Demo
 
         private void Fall(bool isFallPressed)
         {
+            if(isFallPressed)
+                controls.adFall = false; 
+
             if (isFallPressed && IsOnGroundCheck())
             {
-                Debug.Log("Pressed FallKey");
+                //Debug.Log("Pressed FallKey");
                 actions?.Trigger("fall");
             }
         }
@@ -227,14 +246,11 @@ namespace NetcodePlus.Demo
             {
                 touchedGround.PassThroughPlatForm(col);
             }
-            else
-            {
-                Debug.Log("Groud IS Null!");
-            }
         }
 
         private bool IsOnGroundCheck()
         {
+            //Debug.Log(col.IsTouchingLayers());
             if (col.IsTouchingLayers(groundLayer))
             {
                 return true;
@@ -292,7 +308,7 @@ namespace NetcodePlus.Demo
         private void DoAddForce(Vector3 force)
         {
             rigid.AddForce(force,ForceMode2D.Impulse);
-            playerForce = playerForce / 1.01f;
+            playerForce = playerForce / forceRecession;
             if (playerForce.magnitude < 1)
             {
                 playerForce = Vector3.zero;
