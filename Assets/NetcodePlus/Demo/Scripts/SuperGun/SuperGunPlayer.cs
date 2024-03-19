@@ -13,6 +13,8 @@ namespace NetcodePlus.Demo
         public int maxJumpCount = 2;
         public float hp_max = 100;
         public float forceRecession = 1.5f;
+        private float rushForce = 10f;
+        public Vector2 rushDir;
 
         //[Header("Synchonization Parameters")]
         private float sync_refresh_rate = 0.05f;
@@ -29,10 +31,14 @@ namespace NetcodePlus.Demo
         public PlatForm2D touchedGround;
 
         public Camera playerCamera;
-        private Vector3 playerForce;
+
+        [Header("Player Force")]
+        public Vector3 playerForce;
+        
         private float hp;
         private int sync_jumpCount = 2;
         private int currentJumpCount;
+        private int currenFacing = 0;
 
         private PlayerControl2D controls;
         private Transform weaponHandler;
@@ -74,7 +80,7 @@ namespace NetcodePlus.Demo
         }
         private void Start()
         {
-            if(!IsOwner)
+            if (!IsOwner)
             {
                 Destroy(playerCamera.gameObject);
             }
@@ -109,6 +115,8 @@ namespace NetcodePlus.Demo
             bool isFunc1stPressed = controls.IsPress1stFunc();
             bool isFunc2ndPressed = controls.IsPress2ndFunc();
             bool isFallPressed = controls.IsPressFall();
+            bool isRushPressed = controls.IsPressRush();
+            rushDir = controls.rushDir;
             Vector3 move = new Vector3(cmove.x * move_speed, rigid.velocity.y, 0);
 
             //Rotate controls to camera angle
@@ -121,12 +129,13 @@ namespace NetcodePlus.Demo
             Move(move);
             Jump(isJumpPressed);
             Fall(isFallPressed);
+            Rush(isRushPressed);
 
-            if(playerForce!=Vector3.zero)
+            if (playerForce != Vector3.zero)
             {
                 AddForce(playerForce);
             }
-            
+
             UseWeapon1stFunc(isFunc1stPressed);
             UseWeapon2ndFunc(isFunc2ndPressed);
 
@@ -143,6 +152,7 @@ namespace NetcodePlus.Demo
             sync_state.move = move;
             sync_state.jump = isJumpPressed;
             sync_state.fall = isFallPressed;
+            sync_state.rush = isRushPressed;
             sync_state.useWeapon1st = isFunc1stPressed;
             sync_state.useWeapon2nd = isFunc2ndPressed;
             sync_state.playerForce = playerForce;
@@ -175,6 +185,7 @@ namespace NetcodePlus.Demo
             Move(sync_state.move);
             Jump(sync_state.jump);
             Fall(sync_state.fall);
+            Rush(sync_state.rush);
             UseWeapon1stFunc(sync_state.useWeapon1st);
             UseWeapon2ndFunc(sync_state.useWeapon2nd);
         }
@@ -190,19 +201,21 @@ namespace NetcodePlus.Demo
                 if (xVelocity > 0)
                 {
                     transform.localScale = new Vector3(1, 1, 1);
-                    weapon.SetGunFacing(1);
+                    currenFacing = 1;
+                    weapon.SetGunFacing(currenFacing);
                 }
                 else
                 {
                     transform.localScale = new Vector3(-1, 1, 1);
-                    weapon.SetGunFacing(-1);
+                    currenFacing = -1; 
+                    weapon.SetGunFacing(currenFacing);
                 }
 
             }
         }
         private void Jump(bool isJumpPressed)
         {
-            
+
             bool isOnGround = IsOnGroundCheck();
 
             if (isJumpPressed)
@@ -231,8 +244,8 @@ namespace NetcodePlus.Demo
 
         private void Fall(bool isFallPressed)
         {
-            if(isFallPressed)
-                controls.adFall = false; 
+            if (isFallPressed)
+                controls.adFall = false;
 
             if (isFallPressed && IsOnGroundCheck())
             {
@@ -242,7 +255,7 @@ namespace NetcodePlus.Demo
         }
         private void DoFall()
         {
-            if(touchedGround!=null)
+            if (touchedGround != null)
             {
                 touchedGround.PassThroughPlatForm(col);
             }
@@ -280,11 +293,11 @@ namespace NetcodePlus.Demo
         public void Damage(float damage)
         {
             if (IsServer)
-                actions?.Trigger("damage",damage);
+                actions?.Trigger("damage", damage);
         }
         private void DoDamage(float damage)
         {
-            hp-=damage;
+            hp -= damage;
 
             if (hp < 0)
                 Kill();
@@ -297,6 +310,24 @@ namespace NetcodePlus.Demo
         {
 
         }
+        private void Rush(bool isRushPressed)
+        {
+            if (isRushPressed)
+            {
+                if (rushDir == Vector2.zero)
+                {
+                    playerForce += new Vector3(currenFacing * rushForce * 2, 0, 0);
+                }
+
+                Debug.Log("Rush");
+                playerForce += new Vector3(rushDir.x*rushForce*2,rushDir.y*rushForce/3, 0);
+                
+
+                Debug.Log("playerforce=" + playerForce);
+                Debug.Log("rushdir= " + rushDir);
+                Debug.Log("rushforce= " + rushForce);
+            }
+        }
         public void SetForce(Vector3 force)
         {
             playerForce += force;
@@ -307,8 +338,9 @@ namespace NetcodePlus.Demo
         }
         private void DoAddForce(Vector3 force)
         {
-            rigid.AddForce(force,ForceMode2D.Impulse);
-            playerForce = playerForce / forceRecession;
+            rigid.AddForce(force, ForceMode2D.Impulse);
+            playerForce.x = playerForce.x / forceRecession;
+            playerForce.y = playerForce.y / forceRecession;
             if (playerForce.magnitude < 1)
             {
                 playerForce = Vector3.zero;
@@ -374,6 +406,7 @@ namespace NetcodePlus.Demo
         public Vector3 scale;
         public bool jump;
         public bool fall;
+        public bool rush;
         public int jumpCount;
         public bool useWeapon1st;
         public bool useWeapon2nd;

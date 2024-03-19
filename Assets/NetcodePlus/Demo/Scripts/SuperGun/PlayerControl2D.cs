@@ -19,6 +19,9 @@ namespace NetcodePlus.Demo
         public KeyCode jump_key = KeyCode.W;
         [Header("Fall")]
         public KeyCode fall_key = KeyCode.S;
+        [Header("Rush")]
+        public KeyCode rush_key = KeyCode.L;
+        public Vector2 rushDir;
 
         [Header("Camera")]
         public KeyCode cam_rotate_left = KeyCode.Q;
@@ -46,6 +49,7 @@ namespace NetcodePlus.Demo
         private bool press_1stfunc;
         private bool press_jump;
         private bool press_fall;
+        private bool press_rush;
 
         private bool press_accept;
         private bool press_cancel;
@@ -69,6 +73,8 @@ namespace NetcodePlus.Demo
             press_1stfunc = false;
             press_jump = false;
             press_fall = false;
+            press_rush = false;
+            rushDir = Vector2.zero;
 
             press_accept = false;
             press_cancel = false;
@@ -106,6 +112,41 @@ namespace NetcodePlus.Demo
                 press_fall = true;
                 //adFall = false;
             }
+            if(Input.GetKeyDown(rush_key) || adRush)
+            {
+                press_rush = true;
+
+                // 获取冲刺方向，根据键盘输入和移动方向确定
+                rushDir = Vector2.zero;
+
+                if (Input.GetKey(KeyCode.D) || adRightMove)
+                {
+                    rushDir += Vector2.right;
+                }
+                if (Input.GetKey(KeyCode.A) || adLeftMove)
+                {
+                    rushDir += Vector2.left;
+                }
+                if (Input.GetKey(KeyCode.W))
+                {
+                    rushDir += Vector2.up;
+                }
+                if (Input.GetKey(KeyCode.S))
+                {
+                    rushDir += Vector2.down;
+                }
+
+                // 如果没有键盘输入决定冲刺方向，则使用当前移动方向
+                if (rushDir == Vector2.zero)
+                {
+                    rushDir = new Vector2(move.x, move.y);
+                }
+
+                // 归一化冲刺方向
+                rushDir = rushDir.normalized;
+
+                Debug.Log("control Rushforce " + rushDir);
+            }
 
             if (Input.GetKeyDown(menu_accept))
                 press_accept = true;
@@ -131,6 +172,7 @@ namespace NetcodePlus.Demo
         public bool IsPress2ndFunc() { return press_2ndfunc; }
         public bool IsPressJump() { return press_jump; }
 
+        public bool IsPressRush() { return press_rush; }
         public bool IsPressFall() { return press_fall; }
 
         public bool IsPressMenuAccept() { return press_accept; }
