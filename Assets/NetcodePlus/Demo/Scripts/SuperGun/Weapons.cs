@@ -19,7 +19,7 @@ public abstract class Weapons : MonoBehaviour
 
     public void Discard()
     {
-
+        Distory();
     }
     public void Distory()
     {

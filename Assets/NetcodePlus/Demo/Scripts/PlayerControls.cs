@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using Unity.Netcode;
 using UnityEngine;
 
 namespace NetcodePlus.Demo
@@ -8,7 +9,7 @@ namespace NetcodePlus.Demo
     /// Keyboard controls manager
     /// </summary>
 
-    public class PlayerControls : MonoBehaviour
+    public class PlayerControls : SNetworkPlayer
     {
         [Header("Actions")]
         public KeyCode action_key = KeyCode.Space;
@@ -38,7 +39,7 @@ namespace NetcodePlus.Demo
 
         private static PlayerControls instance = null;
 
-        void Awake()
+        protected override void Awake()
         {
             if (instance == null)
                 instance = this;
@@ -46,6 +47,9 @@ namespace NetcodePlus.Demo
 
         void Update()
         {
+            if (!IsOwner)
+                return;
+
             move = Vector2.zero;
             rotate_cam = 0f;
             press_action = false;

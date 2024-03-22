@@ -35,7 +35,7 @@ namespace Suriyun.MCS {
         protected Vector3 tmpVec;
         public override void OnPointerDown(PointerEventData eventData) {
             if (state == ButtonState.Active) {
-                Debug.Log("[" + gameObject.name + "] " + "OnPointerDown : " + eventData.pointerId);
+                //Debug.Log("[" + gameObject.name + "] " + "OnPointerDown : " + eventData.pointerId);
 
                 isFingerDown = true;
                 fingerId = eventData.pointerId;
@@ -98,10 +98,10 @@ namespace Suriyun.MCS {
 
             this.UpdateDirection();
 
-            Debug.Log("Aim Value : " + direction + " | Magnitude : " + direction.magnitude);
+            //Debug.Log("Aim Value : " + direction + " | Magnitude : " + direction.magnitude);
 
             if (direction.magnitude > 0.01f) {
-                directionalPointer.position = aimer.position + direction.normalized * aimerRadius;
+                directionalPointer.position = aimer.position + direction.normalized * aimerRadius*1.7f;//offset
                 directionalPointer.up = direction;
                 directionalPointer.gameObject.SetActive(true);
             } else {

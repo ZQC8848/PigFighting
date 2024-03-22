@@ -17,10 +17,13 @@ public class TouchControlManager : MonoBehaviour
 
     public PlayerControl2D playerControl;
 
+    public static TouchControlManager instance;
+
     private void Start()
     {
         InitControlObject();
         playerControl = PlayerControl2D.Get();
+        instance = this;
     }
     public void InitControlObject()
     {
@@ -28,6 +31,16 @@ public class TouchControlManager : MonoBehaviour
         {
             usingAndroidPlantform = false;
             this.gameObject.SetActive(false);
+        }
+        else if(Application.platform == RuntimePlatform.WindowsEditor)
+        {
+            usingAndroidPlantform = true;
+            this.gameObject.SetActive(true);
+        }
+        else if( Application.platform == RuntimePlatform.Android)
+        {
+            usingAndroidPlantform = true;
+            this.gameObject.SetActive(true);
         }
     }
 
@@ -50,9 +63,10 @@ public class TouchControlManager : MonoBehaviour
             //playerControl.adRightMove = false;
             //playerControl.adLeftMove = false;
             //playerControl.adFall = false;
-            //playerControl.adJump = false;
+            playerControl.adJump = false;
             playerControl.adAttack = false;
             playerControl.adSkill = false;
+            playerControl.adRush = false;
 
             if (analogStick.horizontal >= 0.1)
                 playerControl.adRightMove = true;
@@ -72,6 +86,21 @@ public class TouchControlManager : MonoBehaviour
             if (jumpButton.isFingerDown && analogStick.vertical > -0.5)
                 playerControl.adJump = true;
 
+            if(rushButton.isFingerDown)
+            {
+
+                playerControl.adRush = true;
+
+                if(rushButton.direction.magnitude > 0.3)
+                {
+                    playerControl.adRushDir = rushButton.direction;
+                }
+                else
+                {
+                    playerControl.adRushDir = Vector3.zero;
+                }
+                
+            }
         }
     }
 }

@@ -139,7 +139,7 @@ GameObject:
   - component: {fileID: -498268946711728544}
   m_Layer: 7
   m_Name: GunPlayerBlue
-  m_TagString: Untagged
+  m_TagString: Player
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -269,14 +269,25 @@ MonoBehaviour:
   jump_force: 10
   maxJumpCount: 3
   hp_max: 100
-  forceRecession: 1.5
+  hp: 0
+  rushDir: {x: 0, y: 0, z: 0}
+  sync_refresh_rate: 0.02
+  sync_threshold: 0.1
+  sync_interpolate: 5
+  sync_teleportTime: 0.2
   firstFunc_timer: 0
   secondFunc_timer: 0
+  rush_timer: 0
   groundLayer:
     serializedVersion: 2
     m_Bits: 64
   weapon: {fileID: 0}
   touchedGround: {fileID: 0}
+  playerCamera: {fileID: 0}
+  playerForce: {x: 0, y: 0, z: 0}
+  rushButton: {fileID: 0}
+  poinerTrans: {fileID: 0}
+  amierTrans: {fileID: 0}
 --- !u!1 &6692503566435842544
 GameObject:
   m_ObjectHideFlags: 0

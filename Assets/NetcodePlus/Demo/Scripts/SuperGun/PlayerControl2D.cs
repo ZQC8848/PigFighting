@@ -40,6 +40,7 @@ namespace NetcodePlus.Demo
         public bool adAttack;
         public bool adSkill;
         public bool adRush;
+        public Vector3 adRushDir;
 
         private Vector3 move;
         private float rotate_cam;
@@ -78,6 +79,10 @@ namespace NetcodePlus.Demo
 
             press_accept = false;
             press_cancel = false;
+            if (!adRush)
+            {
+                adRushDir = Vector2.zero;
+            }
 
             Vector3 wasd = Vector3.zero;
 
@@ -114,38 +119,38 @@ namespace NetcodePlus.Demo
             }
             if(Input.GetKeyDown(rush_key) || adRush)
             {
-                press_rush = true;
-
                 // 获取冲刺方向，根据键盘输入和移动方向确定
                 rushDir = Vector2.zero;
+                press_rush = true;
 
-                if (Input.GetKey(KeyCode.D) || adRightMove)
+                if (Input.GetKeyDown(rush_key))
                 {
-                    rushDir += Vector2.right;
+                    if (Input.GetKey(KeyCode.D) || adRightMove)
+                    {
+                        rushDir += Vector2.right;
+                    }
+                    if (Input.GetKey(KeyCode.A) || adLeftMove)
+                    {
+                        rushDir += Vector2.left;
+                    }
+                    if (Input.GetKey(KeyCode.W))
+                    {
+                        rushDir += Vector2.up;
+                    }
+                    if (Input.GetKey(KeyCode.S))
+                    {
+                        rushDir += Vector2.down;
+                    }
                 }
-                if (Input.GetKey(KeyCode.A) || adLeftMove)
+                if (adRush)
                 {
-                    rushDir += Vector2.left;
-                }
-                if (Input.GetKey(KeyCode.W))
-                {
-                    rushDir += Vector2.up;
-                }
-                if (Input.GetKey(KeyCode.S))
-                {
-                    rushDir += Vector2.down;
-                }
-
-                // 如果没有键盘输入决定冲刺方向，则使用当前移动方向
-                if (rushDir == Vector2.zero)
-                {
-                    rushDir = new Vector2(move.x, move.y);
+                    rushDir = adRushDir;
                 }
 
                 // 归一化冲刺方向
                 rushDir = rushDir.normalized;
 
-                Debug.Log("control Rushforce " + rushDir);
+               // Debug.Log("control Rushforce " + rushDir);
             }
 
             if (Input.GetKeyDown(menu_accept))

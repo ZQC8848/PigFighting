@@ -49,7 +49,7 @@ IPointerUpHandler {
         }
         [SerializeField]
         public float vertical {
-            get { return direction.y; }
+            get {  return direction.y; }
         }
         #endregion
         #region Cosmetics
@@ -131,7 +131,7 @@ IPointerUpHandler {
         public virtual void OnBeginDrag(PointerEventData eventData) {
             if (isAimable
                 && state == ButtonState.Pressed) {
-                Debug.Log("[" + gameObject.name + "] " + "OnBeginDrag - FingerID : " + eventData.pointerId);
+                //Debug.Log("[" + gameObject.name + "] " + "OnBeginDrag - FingerID : " + eventData.pointerId);
 
                 isManualAimOverride = true;
 
@@ -150,7 +150,7 @@ IPointerUpHandler {
                 && eventData.pointerId == fingerId
                 && state == ButtonState.Pressed) {
                 UpdateAiming(eventData);
-                Debug.Log("[" + gameObject.name + "] " + "OnDrag - FingerID : " + eventData.pointerId);
+               // Debug.Log("[" + gameObject.name + "] " + "OnDrag - FingerID : " + eventData.pointerId);
 
 
                 if (skillCanceller != null) {
@@ -167,14 +167,14 @@ IPointerUpHandler {
 
         public virtual void OnPointerUp(PointerEventData eventData) {
             if (state == ButtonState.Pressed) {
-                Debug.Log("[" + gameObject.name + "] " + "OnPointerUp - FingerID : " + eventData.pointerId);
+                //Debug.Log("[" + gameObject.name + "] " + "OnPointerUp - FingerID : " + eventData.pointerId);
 
                 isFingerDown = false;
                 fingerId = -99;
 
                 if (Vector3.Distance(initialFingerPosition, fingerPosition) > btnRadius) {
                     isPointerUpOutOfBound = true;
-                    Debug.Log("isPointerUpOutOfBound : " + isPointerUpOutOfBound.ToString());
+                    //Debug.Log("isPointerUpOutOfBound : " + isPointerUpOutOfBound.ToString());
                 }
 
                 if (isAimable) {
@@ -207,7 +207,7 @@ IPointerUpHandler {
 
         public virtual void OnEndDrag(PointerEventData eventData) {
             if (isAimable) {
-                Debug.Log("[" + gameObject.name + "] " + "OnEndDrag - FingerID : " + eventData.pointerId);
+                //Debug.Log("[" + gameObject.name + "] " + "OnEndDrag - FingerID : " + eventData.pointerId);
                 isManualAimOverride = false;
 
                 this.ResetDirection();
@@ -227,12 +227,11 @@ IPointerUpHandler {
 
             this.UpdateDirection();
 
-            Debug.Log("Aim Value : " + direction + " \t\t Magnitude : " + direction.magnitude);
+            //Debug.Log("Aim Value : " + direction + " \t\t Magnitude : " + direction.magnitude);
         }
 
         protected virtual void ResetDirection()
         {
-            Debug.Log("Reset diraction!!1");
             rawDir = Vector3.zero;
 
             this.UpdateDirection();
@@ -303,7 +302,8 @@ IPointerUpHandler {
             Debug.Log("[" + gameObject.name + "] Radius : " + btnRadius + "\t Scale Factor : " + scaler.scaleFactor);
             Debug.Log(this.gameObject.name + " >> " + btnRadius + " = " + btn.sizeDelta.x / 2f);
             if (isAimable) {
-                aimerRadius = aimer.rect.width / 2f * scaler.scaleFactor;
+                aimerRadius = aimer.rect.width / 2f * scaler.scaleFactor + 130f;//offset
+                //aimerRadius = aimer.rect.width / scaler.scaleFactor;
             }
             if (skillCanceller != null) {
                 cancellerRadius = skillCanceller.rect.width / 2f * scaler.scaleFactor;

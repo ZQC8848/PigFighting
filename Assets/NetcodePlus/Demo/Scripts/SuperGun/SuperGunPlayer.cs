@@ -1,7 +1,12 @@
+using Suriyun.MCS;
+using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Data.SqlTypes;
 using Unity.Netcode;
+using Unity.VisualScripting;
 using UnityEngine;
+using UnityEngine.EventSystems;
 
 namespace NetcodePlus.Demo
 {
@@ -12,18 +17,25 @@ namespace NetcodePlus.Demo
         public float jump_force = 10f;
         public int maxJumpCount = 2;
         public float hp_max = 100;
-        public float forceRecession = 1.5f;
-        private float rushForce = 10f;
-        public Vector2 rushDir;
+        public float hp;
+        public float life;
+        public float life_max = 10;
+        private float forceRecession = 1.5f;
+        private float rushDistance = 5f;
+        private float rushTime = 0.2f;
+        private float rushTimeCoolDown = 1f;
+        public Vector3 rushDir;
 
         //[Header("Synchonization Parameters")]
-        private float sync_refresh_rate = 0.05f;
-        private float sync_threshold = 0.1f;
-        private float sync_interpolate = 5f;
+        public float sync_refresh_rate = 0.02f;
+        public float sync_threshold = 0.1f;
+        public float sync_interpolate = 5f;
+        public float sync_teleportTime = 0.2f;
 
         [Header("Cooling Time")]
         public float firstFunc_timer = 0;
         public float secondFunc_timer = 0;
+        public float rush_timer = 0;
 
         [Header("Other Setting")]
         public LayerMask groundLayer;
@@ -34,8 +46,12 @@ namespace NetcodePlus.Demo
 
         [Header("Player Force")]
         public Vector3 playerForce;
-        
-        private float hp;
+
+        [Header("RushButton")]
+        public UniversalButton rushButton;
+        public RectTransform poinerTrans;
+        public RectTransform amierTrans;
+
         private int sync_jumpCount = 2;
         private int currentJumpCount;
         private int currenFacing = 0;
@@ -48,15 +64,24 @@ namespace NetcodePlus.Demo
         private SuperGunPlayerState sync_state = new SuperGunPlayerState();
         private float refresh_timer = 0f;
 
+        private static List<SuperGunPlayer> superGunPlayer_list = new List<SuperGunPlayer>();
+
         protected override void Awake()
         {
             base.Awake();
+            superGunPlayer_list.Add(this);
             rigid = GetComponent<Rigidbody2D>();
             col = GetComponent<Collider2D>();
             sync_state.position = transform.position;
             hp = hp_max;
+            life = life_max;
             weaponHandler = transform.Find("WeaponHandler");
             playerCamera = GetComponentInChildren<Camera>();
+        }
+        protected override void OnDestroy()
+        {
+            base.OnDestroy();
+            superGunPlayer_list.Remove(this);
         }
 
         protected override void OnSpawn()
@@ -70,6 +95,8 @@ namespace NetcodePlus.Demo
             actions.Register("func2", DoUseWeapon2ndFunc);
             actions.RegisterFloat("damage", DoDamage);
             actions.RegisterVector("addForce", DoAddForce);
+            actions.RegisterVector("rush", DoRush);
+            actions.Register("kill", DoKill);
             actions.RegisterSerializable("sync", ReceiveSync, NetworkDelivery.Unreliable);
         }
 
@@ -84,6 +111,12 @@ namespace NetcodePlus.Demo
             {
                 Destroy(playerCamera.gameObject);
             }
+            else
+            {
+                rushButton = GameObject.Find("Skill0").GetComponent<UniversalButton>();
+                amierTrans = rushButton.aimer.GetComponent<RectTransform>();
+                poinerTrans = rushButton.pointer.GetComponent<RectTransform>();
+            }
         }
 
         protected virtual void Update()
@@ -92,6 +125,7 @@ namespace NetcodePlus.Demo
             UpdateNotOwner();
             firstFunc_timer += Time.deltaTime;
             secondFunc_timer += Time.deltaTime;
+            rush_timer += Time.deltaTime;
             if (Input.GetKeyDown(KeyCode.T))
             {
                 Debug.Log(weaponHandler.transform.position);
@@ -116,7 +150,20 @@ namespace NetcodePlus.Demo
             bool isFunc2ndPressed = controls.IsPress2ndFunc();
             bool isFallPressed = controls.IsPressFall();
             bool isRushPressed = controls.IsPressRush();
-            rushDir = controls.rushDir;
+
+            if (Application.platform == RuntimePlatform.Android)
+            {
+                rushDir = (Vector2)TouchControlManager.instance.rushButton.direction;
+            }
+            else if (Application.platform == RuntimePlatform.WindowsEditor)
+            {
+                rushDir = (Vector2)TouchControlManager.instance.rushButton.direction;
+            }
+            else if(Application.platform == RuntimePlatform.WindowsPlayer)
+            {
+                rushDir = controls.rushDir;
+            }
+
             Vector3 move = new Vector3(cmove.x * move_speed, rigid.velocity.y, 0);
 
             //Rotate controls to camera angle
@@ -152,6 +199,7 @@ namespace NetcodePlus.Demo
             sync_state.move = move;
             sync_state.jump = isJumpPressed;
             sync_state.fall = isFallPressed;
+            sync_state.rushDir = rushDir;
             sync_state.rush = isRushPressed;
             sync_state.useWeapon1st = isFunc1stPressed;
             sync_state.useWeapon2nd = isFunc2ndPressed;
@@ -173,11 +221,17 @@ namespace NetcodePlus.Demo
 
             Vector3 offset = sync_state.position - transform.position; //Is the character position out of sync?
 
-            if (offset.magnitude > sync_threshold)
-                transform.position = Vector3.MoveTowards(transform.position, sync_state.position, sync_interpolate * Time.deltaTime);
+            if (offset.magnitude > sync_threshold && offset.magnitude < sync_threshold * 10f)
+            {
+               transform.position = Vector3.MoveTowards(transform.position, sync_state.position, sync_interpolate * Time.deltaTime);
+            }
 
-            if (offset.magnitude > sync_threshold * 10f)
-                transform.position = sync_state.position; //Teleport if too far
+            if (!sync_state.onRush)//stop syncropos in rush
+            {
+                if (offset.magnitude >= sync_threshold * 10f)
+                    StartCoroutine(OffsetMove(sync_state.position, rushTime));
+            }
+
 
             currentJumpCount = sync_jumpCount;
             AddForce(sync_state.playerForce);
@@ -185,11 +239,30 @@ namespace NetcodePlus.Demo
             Move(sync_state.move);
             Jump(sync_state.jump);
             Fall(sync_state.fall);
+            playerForce = sync_state.playerForce;
+            rushDir = sync_state.rushDir;
             Rush(sync_state.rush);
             UseWeapon1stFunc(sync_state.useWeapon1st);
             UseWeapon2ndFunc(sync_state.useWeapon2nd);
         }
+        IEnumerator OffsetMove(Vector3 targetPos, float offsetTime)
+        {
+            float elapsedTime = 0; // 已过时间
+            Vector2 startPosition = transform.position; // 开始位置
 
+            while (elapsedTime < offsetTime)
+            {
+                // 计算当前时间在总时间的比例
+                float ratio = elapsedTime / offsetTime;
+                // 使用插值函数更新位置
+                transform.position = Vector2.Lerp(startPosition, targetPos, ratio);
+                elapsedTime += Time.deltaTime; // 更新已过时间
+                yield return null; // 等待下一帧
+            }
+
+            // 确保物体完全移动到目标位置
+            transform.position = targetPos;
+        }
         private void Move(Vector3 dir)
         {
             rigid.velocity = dir;
@@ -218,9 +291,6 @@ namespace NetcodePlus.Demo
 
             bool isOnGround = IsOnGroundCheck();
 
-            if (isJumpPressed)
-                controls.adJump = false;
-
             if (isOnGround)
                 //Debug.Log("onground");
                 currentJumpCount = maxJumpCount - 1;
@@ -244,9 +314,6 @@ namespace NetcodePlus.Demo
 
         private void Fall(bool isFallPressed)
         {
-            if (isFallPressed)
-                controls.adFall = false;
-
             if (isFallPressed && IsOnGroundCheck())
             {
                 //Debug.Log("Pressed FallKey");
@@ -275,7 +342,7 @@ namespace NetcodePlus.Demo
         }
         public void EquipWeapon(string weaponName)
         {
-            actions?.Trigger("equip", weaponName);
+                actions?.Trigger("equip", weaponName);
         }
         private void DoEquipWeapon(string weaponName)
         {
@@ -298,34 +365,95 @@ namespace NetcodePlus.Demo
         private void DoDamage(float damage)
         {
             hp -= damage;
-
+            Debug.Log(PlayerID + "hp:" + hp);
             if (hp < 0)
                 Kill();
         }
         public void Kill()
         {
-
+            Debug.Log(player_id + "die");
+            if(IsOwner)
+            {
+                actions?.Trigger("kill");
+            }
         }
         private void DoKill()
         {
+            PlayerSpawn spawn =  PlayerSpawn.Get(player_id);
 
+            hp = hp_max;
+            this.transform.position = spawn.transform.position;
+
+            if (IsOwner)
+            {
+                EquipWeapon("pistol");
+            }
+            life--;
         }
         private void Rush(bool isRushPressed)
         {
-            if (isRushPressed)
+            if (isRushPressed && rush_timer > rushTimeCoolDown)
             {
-                if (rushDir == Vector2.zero)
+
+                if (rushDir == Vector3.zero  && Application.platform == RuntimePlatform.WindowsPlayer)
                 {
-                    playerForce += new Vector3(currenFacing * rushForce * 2, 0, 0);
+                    rushDir = new Vector2(GetUserFacing(), 0);
+                    actions?.Trigger("rush", rushDir);
+                    return;
                 }
-
-                Debug.Log("Rush");
-                playerForce += new Vector3(rushDir.x*rushForce*2,rushDir.y*rushForce/3, 0);
+                else if( Application.platform == RuntimePlatform.WindowsEditor)
+                {
+                    rushDir = (poinerTrans.position-amierTrans.position);
+                    Debug.Log("get button: " + rushDir);
+                    if(rushDir.magnitude > 0.8f)
+                    {
+                        actions?.Trigger("rush", rushDir);
+                    }
+                    return;
+                }
                 
+            }
+        }
+        private void DoRush(Vector3 _rushDir)
+        {
+           // Debug.Log("rushDir:"+ rushDir);
+            StartCoroutine(IEnumRush(_rushDir));
+            rush_timer = 0;
+            if (!IsOwner)
+            {
+                Debug.Log("other player DO rush");
+                Debug.Log("rush Dir = " + rushDir);
+            }
+        }
+        IEnumerator IEnumRush(Vector3 _rushDir)
+        {
+            float elapsedTime = 0; // 已过时间
+            Vector2 startPosition = transform.position; // 开始位置
+            Vector2 targetPosition = startPosition + (Vector2)_rushDir.normalized * rushDistance; // 目标位置
+            Debug.Log("rushDir = :"+_rushDir);
+            Debug.Log("rushDir normal:" + rushDir.normalized);
+            if(IsOwner)
+            {
+                sync_state.onRush = true;
+            }
 
-                Debug.Log("playerforce=" + playerForce);
-                Debug.Log("rushdir= " + rushDir);
-                Debug.Log("rushforce= " + rushForce);
+            while (elapsedTime < rushTime)
+            {
+
+                // 计算当前时间在总时间的比例
+                float ratio = elapsedTime / rushTime;
+                // 使用插值函数更新位置
+                transform.position = Vector2.Lerp(startPosition, targetPosition, ratio);
+                elapsedTime += Time.deltaTime; // 更新已过时间
+                yield return null; // 等待下一帧
+            }
+
+            // 确保物体完全移动到目标位置
+            transform.position = targetPosition;
+            
+            if (IsOwner)
+            {
+                sync_state.onRush = false;
             }
         }
         public void SetForce(Vector3 force)
@@ -395,6 +523,19 @@ namespace NetcodePlus.Demo
             sync_state = state;
             hp = state.hp;
         }
+        public static new SuperGunPlayer Get(int player_id)
+        {
+            foreach (SuperGunPlayer superGunPlayer in superGunPlayer_list)
+            {
+                if (superGunPlayer.player_id == player_id)
+                    return superGunPlayer;
+            }
+            return null;
+        }
+        public static new List<SuperGunPlayer> GetAll()
+        {
+            return superGunPlayer_list;
+        }
     }
 
     [System.Serializable]
@@ -412,9 +553,12 @@ namespace NetcodePlus.Demo
         public bool useWeapon2nd;
         public float hp;
         public Vector3 playerForce;
+        public Vector2 rushDir;
+        public bool onRush;
 
         public void NetworkSerialize<T>(BufferSerializer<T> serializer) where T : IReaderWriter
         {
+            serializer.SerializeValue(ref playerForce);
             serializer.SerializeValue(ref hp);
             serializer.SerializeValue(ref timing);
             serializer.SerializeValue(ref position);
@@ -422,6 +566,13 @@ namespace NetcodePlus.Demo
             serializer.SerializeValue(ref jump);
             serializer.SerializeValue(ref scale);
             serializer.SerializeValue(ref jumpCount);
+            serializer.SerializeValue(ref fall);
+            serializer.SerializeValue(ref rush);
+            serializer.SerializeValue(ref useWeapon1st);
+            serializer.SerializeValue(ref useWeapon2nd);
+            serializer.SerializeValue(ref hp);
+            serializer.SerializeValue(ref rushDir);
+            serializer.SerializeValue(ref onRush);
         }
     }
 }
