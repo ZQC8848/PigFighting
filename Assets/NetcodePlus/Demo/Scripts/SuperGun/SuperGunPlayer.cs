@@ -19,12 +19,13 @@ namespace NetcodePlus.Demo
         public float hp_max = 100;
         public float hp;
         public float life;
-        public float life_max = 10;
+        public float life_max = 3;
         private float forceRecession = 1.5f;
         private float rushDistance = 5f;
         private float rushTime = 0.2f;
         private float rushTimeCoolDown = 1f;
         public Vector3 rushDir;
+        public bool Ondie = false;
 
         //[Header("Synchonization Parameters")]
         public float sync_refresh_rate = 0.02f;
@@ -52,7 +53,6 @@ namespace NetcodePlus.Demo
         public RectTransform poinerTrans;
         public RectTransform amierTrans;
 
-        private int sync_jumpCount = 2;
         private int currentJumpCount;
         private int currenFacing = 0;
 
@@ -97,6 +97,7 @@ namespace NetcodePlus.Demo
             actions.RegisterVector("addForce", DoAddForce);
             actions.RegisterVector("rush", DoRush);
             actions.Register("kill", DoKill);
+            actions.Register("die", DoDie);
             actions.RegisterSerializable("sync", ReceiveSync, NetworkDelivery.Unreliable);
         }
 
@@ -111,11 +112,16 @@ namespace NetcodePlus.Demo
             {
                 Destroy(playerCamera.gameObject);
             }
-            else
+            else if(Application.platform == RuntimePlatform.Android)
             {
                 rushButton = GameObject.Find("Skill0").GetComponent<UniversalButton>();
                 amierTrans = rushButton.aimer.GetComponent<RectTransform>();
                 poinerTrans = rushButton.pointer.GetComponent<RectTransform>();
+            }
+
+            if(IsOwner)
+            {
+                EquipWeapon("pistol");
             }
         }
 
@@ -157,7 +163,7 @@ namespace NetcodePlus.Demo
             }
             else if (Application.platform == RuntimePlatform.WindowsEditor)
             {
-                rushDir = (Vector2)TouchControlManager.instance.rushButton.direction;
+                rushDir = controls.rushDir;
             }
             else if(Application.platform == RuntimePlatform.WindowsPlayer)
             {
@@ -204,7 +210,7 @@ namespace NetcodePlus.Demo
             sync_state.useWeapon1st = isFunc1stPressed;
             sync_state.useWeapon2nd = isFunc2ndPressed;
             sync_state.playerForce = playerForce;
-            sync_jumpCount = currentJumpCount;
+            //sync_jumpCount = currentJumpCount;
 
             actions?.Trigger("sync", sync_state); // ReceiveSync(sync_state)
         }
@@ -233,7 +239,7 @@ namespace NetcodePlus.Demo
             }
 
 
-            currentJumpCount = sync_jumpCount;
+            //currentJumpCount = sync_jumpCount;
             AddForce(sync_state.playerForce);
             Turn(sync_state.move.x);
             Move(sync_state.move);
@@ -247,20 +253,17 @@ namespace NetcodePlus.Demo
         }
         IEnumerator OffsetMove(Vector3 targetPos, float offsetTime)
         {
-            float elapsedTime = 0; // 已过时间
-            Vector2 startPosition = transform.position; // 开始位置
+            float elapsedTime = 0; 
+            Vector2 startPosition = transform.position; 
 
             while (elapsedTime < offsetTime)
             {
-                // 计算当前时间在总时间的比例
                 float ratio = elapsedTime / offsetTime;
-                // 使用插值函数更新位置
                 transform.position = Vector2.Lerp(startPosition, targetPos, ratio);
-                elapsedTime += Time.deltaTime; // 更新已过时间
-                yield return null; // 等待下一帧
+                elapsedTime += Time.deltaTime; 
+                yield return null; 
             }
 
-            // 确保物体完全移动到目标位置
             transform.position = targetPos;
         }
         private void Move(Vector3 dir)
@@ -342,7 +345,10 @@ namespace NetcodePlus.Demo
         }
         public void EquipWeapon(string weaponName)
         {
+            if (!Ondie)
+            {
                 actions?.Trigger("equip", weaponName);
+            }
         }
         private void DoEquipWeapon(string weaponName)
         {
@@ -389,19 +395,36 @@ namespace NetcodePlus.Demo
                 EquipWeapon("pistol");
             }
             life--;
+            if(life <= 0 && !Ondie)
+            {
+                Die();
+            }
+        }
+        public void Die()
+        {
+            actions?.Trigger("die");
+        }
+        private void DoDie()
+        {
+            Ondie = true;
+            transform.Find("LiveBody").gameObject.SetActive(false);
+            transform.Find("DeathBody").gameObject.SetActive(true);
+            this.gameObject.layer = 9;
+            jump_force *= 1.5f;
+            weapon.Discard();
         }
         private void Rush(bool isRushPressed)
         {
             if (isRushPressed && rush_timer > rushTimeCoolDown)
             {
 
-                if (rushDir == Vector3.zero  && Application.platform == RuntimePlatform.WindowsPlayer)
+                if (rushDir == Vector3.zero  && (Application.platform == RuntimePlatform.WindowsPlayer || Application.platform == RuntimePlatform.WindowsEditor))
                 {
                     rushDir = new Vector2(GetUserFacing(), 0);
                     actions?.Trigger("rush", rushDir);
                     return;
                 }
-                else if( Application.platform == RuntimePlatform.WindowsEditor)
+                else if( Application.platform == RuntimePlatform.Android)
                 {
                     rushDir = (poinerTrans.position-amierTrans.position);
                     Debug.Log("get button: " + rushDir);
@@ -411,7 +434,7 @@ namespace NetcodePlus.Demo
                     }
                     return;
                 }
-                
+                actions?.Trigger("rush", rushDir);
             }
         }
         private void DoRush(Vector3 _rushDir)
@@ -476,6 +499,9 @@ namespace NetcodePlus.Demo
         }
         public void UseWeapon1stFunc(bool isPressed)
         {
+            if (Ondie)
+                return;
+
             if (isPressed && IsOwner && firstFunc_timer > weapon.firstFuncCoolTime)
             {
                 actions?.Trigger("func1");
@@ -488,6 +514,9 @@ namespace NetcodePlus.Demo
         }
         public void UseWeapon2ndFunc(bool isPressed)
         {
+            if (Ondie)
+                return;
+
             if (isPressed && IsOwner && secondFunc_timer > weapon.secondFuncCoolTime)
             {
                 actions?.Trigger("func2");

@@ -33,6 +33,10 @@ public class Pistol : Weapons
     [Header("Player Id")]
     public int playerId;
 
+    [Header("Skill Continue")]
+    public float skillContinueTime;
+    public bool onSkill;
+
     public SuperGunPlayer gunPlayer;
     private void Start()
     {
@@ -42,12 +46,23 @@ public class Pistol : Weapons
     }
     public override void FisrtFunc()
     {
+        if(onSkill)
+        {
+            ShootGreenBullet();
+            return;
+        }
         ShootRedBullet();
     }
 
     public override void SecondFunc()
     {
-        ShootGreenBullet();
+        onSkill = true;
+        Invoke("ShutDownSkillTime", skillContinueTime);
+    }
+    
+    void ShutDownSkillTime()
+    {
+        onSkill = false;
     }
 
     void ShootRedBullet()

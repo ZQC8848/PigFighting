@@ -34,8 +34,8 @@ public class TouchControlManager : MonoBehaviour
         }
         else if(Application.platform == RuntimePlatform.WindowsEditor)
         {
-            usingAndroidPlantform = true;
-            this.gameObject.SetActive(true);
+            usingAndroidPlantform = false;
+            this.gameObject.SetActive(false);
         }
         else if( Application.platform == RuntimePlatform.Android)
         {

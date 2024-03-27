@@ -73,7 +73,8 @@ SpriteRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 2
-  m_Sprite: {fileID: 7482667652216324306, guid: 311925a002f4447b3a28927169b83ea6, type: 3}
+  m_Sprite: {fileID: 7482667652216324306, guid: 311925a002f4447b3a28927169b83ea6,
+    type: 3}
   m_Color: {r: 0, g: 0, b: 0, a: 1}
   m_FlipX: 0
   m_FlipY: 0
@@ -157,7 +158,8 @@ SpriteRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 2
-  m_Sprite: {fileID: 7482667652216324306, guid: 311925a002f4447b3a28927169b83ea6, type: 3}
+  m_Sprite: {fileID: 7482667652216324306, guid: 311925a002f4447b3a28927169b83ea6,
+    type: 3}
   m_Color: {r: 0, g: 0, b: 0, a: 1}
   m_FlipX: 0
   m_FlipY: 0
@@ -248,10 +250,12 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   weaponsName: pistol
   firstFuncCoolTime: 1
-  secondFuncCoolTime: 0.5
+  secondFuncCoolTime: 15
   weaponGameObject: {fileID: 5030293176370450137}
-  redBullet: {fileID: 1388074884096637546, guid: e8b5ef275952ace4fad3565010320999, type: 3}
-  greenBullet: {fileID: 218605452464407985, guid: 6a54e97d03f81da4a9cf48fdb0a62fa6, type: 3}
+  redBullet: {fileID: 1388074884096637546, guid: e8b5ef275952ace4fad3565010320999,
+    type: 3}
+  greenBullet: {fileID: 218605452464407985, guid: 6a54e97d03f81da4a9cf48fdb0a62fa6,
+    type: 3}
   weaponCount: 3000
   firePoint: {fileID: 0}
   bulletPool: {fileID: 0}
@@ -263,4 +267,6 @@ MonoBehaviour:
   greenBulletImpactForce: 30
   recoil: 2
   playerId: 0
+  skillContinueTime: 10
+  onSkill: 0
   gunPlayer: {fileID: 0}
