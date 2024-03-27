@@ -9,6 +9,7 @@ namespace NetcodePlus.Demo
         private SNetworkActions actions;
 
         private bool ended = false;
+        public List<SuperGunPlayer> playerDataList;
         protected override void Awake()
         {
             base.Awake();
@@ -78,6 +79,7 @@ namespace NetcodePlus.Demo
                         SuperGunPlayer _superGunPlayer = SuperGunPlayer.Get(aplayer.player_id);
                         if (_superGunPlayer != null && aplayer.IsAssigned())
                         {
+                            playerDataList.Add(_superGunPlayer);
                             count_all += 1;
                             if (_superGunPlayer.life > 0)
                                 count_alive += 1;
