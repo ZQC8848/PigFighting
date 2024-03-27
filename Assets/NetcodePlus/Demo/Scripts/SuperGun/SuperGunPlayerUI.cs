@@ -1,0 +1,60 @@
+using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+using UnityEngine.UI;
+
+namespace NetcodePlus.Demo
+{
+
+    public class SuperGunPlayerUI : MonoBehaviour
+    {
+        public int player_id;
+        public Text username;
+        public SuperGunHPBar hp_bar;
+
+        void Start()
+        {
+            hp_bar.gameObject.SetActive(false);
+            username.gameObject.SetActive(false);
+        }
+
+        void Update()
+        {
+            if (!TheNetwork.Get().IsConnected())
+                return;
+
+            GameData gdata = GameData.Get();
+            if (gdata == null)
+                return;
+
+            PlayerData player = gdata.GetPlayer(player_id);
+            if (player == null)
+                return;
+
+            username.text = player.username;
+
+            bool visible = player.connected;
+            if (hp_bar.gameObject.activeSelf != visible)
+                hp_bar.gameObject.SetActive(visible);
+            if (username.gameObject.activeSelf != visible)
+                username.gameObject.SetActive(visible);
+
+            PlayerChoiceData choice = PlayerChoiceData.Get(GameMode.SuperGun, player.character);
+            if (choice != null)
+                hp_bar.color = choice.color;
+
+            SuperGunPlayer gunPlayer = SuperGunPlayer.Get(player_id);
+            if (gunPlayer != null)
+            {
+                //Debug.Log(gunPlayer.name);
+                hp_bar.currentHealth = gunPlayer.hp;
+                hp_bar.maxHealth = gunPlayer.hp_max;
+                //Debug.Log(hp_bar.currentHealth + " / " + hp_bar.maxHealth);
+            }
+            else
+            {
+                hp_bar.currentHealth = 0;
+            }
+        }
+    }
+}
