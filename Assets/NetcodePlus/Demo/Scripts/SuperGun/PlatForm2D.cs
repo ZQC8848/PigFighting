@@ -7,10 +7,9 @@ public class PlatForm2D : MonoBehaviour
 {
     Collider2D platformCollider;
 
-    public float passthroughTime=0.25f;
-
-    public SuperGunPlayer player;
-
+    private float passthroughTime=0.25f;
+    public List<SuperGunPlayer> onPlatPlayerList;
+    SuperGunPlayer player;
 
     private void Start()
     {
@@ -19,17 +18,20 @@ public class PlatForm2D : MonoBehaviour
 
     private void OnCollisionEnter2D(Collision2D collision)
     {
-        if((player =  collision.gameObject.GetComponent<SuperGunPlayer>())!=null)
+        if ((player = collision.gameObject.GetComponent<SuperGunPlayer>()) != null)
         {
+            onPlatPlayerList.Add(player);
             player.touchedGround = this;
+            player = null;
         }
     }
-
     private void OnCollisionExit2D(Collision2D collision)
     {
         if ((player = collision.gameObject.GetComponent<SuperGunPlayer>()) != null)
         {
+            onPlatPlayerList.Remove(player);
             player.touchedGround = null;
+            player = null;
         }
     }
 

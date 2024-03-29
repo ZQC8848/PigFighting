@@ -80,7 +80,7 @@ public class Pistol : Weapons
 
     void ShootGreenBullet()
     {
-        GameObject bullet = Instantiate(greenBullet, firePoint.position, firePoint.rotation, bulletPool);
+        GameObject bullet = Instantiate(greenBullet, firePoint.position +  GetBulletDir(), firePoint.rotation, bulletPool);
 
         Rigidbody2D rb = bullet.GetComponent<Rigidbody2D>();
         rb.velocity = GetBulletDir() * greenBulletSpeed;

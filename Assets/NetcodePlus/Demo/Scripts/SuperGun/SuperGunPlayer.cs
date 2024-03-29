@@ -53,6 +53,9 @@ namespace NetcodePlus.Demo
         public RectTransform poinerTrans;
         public RectTransform amierTrans;
 
+        [Header("Animator")]
+        public Animator animator;
+
         private int currentJumpCount;
         private int currenFacing = 0;
 
@@ -61,6 +64,7 @@ namespace NetcodePlus.Demo
         private Rigidbody2D rigid;
         private Collider2D col;
         private SNetworkActions actions;
+
         private SuperGunPlayerState sync_state = new SuperGunPlayerState();
         private float refresh_timer = 0f;
 
@@ -77,6 +81,7 @@ namespace NetcodePlus.Demo
             life = life_max; 
             weaponHandler = transform.Find("WeaponHandler");
             playerCamera = GetComponentInChildren<Camera>();
+            animator = transform.Find("LiveBody").GetChild(0).GetComponent<Animator>();
         }
         protected override void OnDestroy()
         {
@@ -271,6 +276,8 @@ namespace NetcodePlus.Demo
         private void Move(Vector3 dir)
         {
             rigid.velocity = dir;
+            bool playerHasXAxisSpeed = Mathf.Abs(rigid.velocity.x) > Mathf.Epsilon;
+            animator.SetBool("move",playerHasXAxisSpeed);
         }
         private void Turn(float xVelocity)
         {
