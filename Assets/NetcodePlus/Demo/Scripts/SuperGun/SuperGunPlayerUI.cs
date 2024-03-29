@@ -11,11 +11,13 @@ namespace NetcodePlus.Demo
         public int player_id;
         public Text username;
         public SuperGunHPBar hp_bar;
+        public Text lastLife;
 
         void Start()
         {
             hp_bar.gameObject.SetActive(false);
             username.gameObject.SetActive(false);
+            lastLife.gameObject.SetActive(false);
         }
 
         void Update()
@@ -38,6 +40,8 @@ namespace NetcodePlus.Demo
                 hp_bar.gameObject.SetActive(visible);
             if (username.gameObject.activeSelf != visible)
                 username.gameObject.SetActive(visible);
+            if(lastLife.gameObject.activeSelf != visible)
+                lastLife.gameObject.SetActive(visible);
 
             PlayerChoiceData choice = PlayerChoiceData.Get(GameMode.SuperGun, player.character);
             if (choice != null)
@@ -49,6 +53,7 @@ namespace NetcodePlus.Demo
                 //Debug.Log(gunPlayer.name);
                 hp_bar.currentHealth = gunPlayer.hp;
                 hp_bar.maxHealth = gunPlayer.hp_max;
+                lastLife.text = gunPlayer.life.ToString();
                 //Debug.Log(hp_bar.currentHealth + " / " + hp_bar.maxHealth);
             }
             else

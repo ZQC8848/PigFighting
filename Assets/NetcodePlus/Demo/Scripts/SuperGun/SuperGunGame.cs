@@ -81,7 +81,7 @@ namespace NetcodePlus.Demo
                         {
                             playerDataList.Add(_superGunPlayer);
                             count_all += 1;
-                            if (_superGunPlayer.life > 0)
+                            if (!_superGunPlayer.Ondie)
                                 count_alive += 1;
                         }
                     }

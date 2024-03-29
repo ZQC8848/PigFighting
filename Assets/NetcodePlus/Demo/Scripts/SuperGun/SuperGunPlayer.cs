@@ -19,7 +19,7 @@ namespace NetcodePlus.Demo
         public float hp_max = 100;
         public float hp;
         public float life;
-        public float life_max = 3;
+        public float life_max;
         private float forceRecession = 1.5f;
         private float rushDistance = 5f;
         private float rushTime = 0.2f;
@@ -74,7 +74,7 @@ namespace NetcodePlus.Demo
             col = GetComponent<Collider2D>();
             sync_state.position = transform.position;
             hp = hp_max;
-            life = life_max;
+            life = life_max; 
             weaponHandler = transform.Find("WeaponHandler");
             playerCamera = GetComponentInChildren<Camera>();
         }
@@ -202,6 +202,7 @@ namespace NetcodePlus.Demo
             sync_state.timing = sync_state.timing + 1;
             sync_state.position = transform.position;
             sync_state.hp = hp;
+            sync_state.life = life;
             sync_state.move = move;
             sync_state.jump = isJumpPressed;
             sync_state.fall = isFallPressed;
@@ -247,6 +248,7 @@ namespace NetcodePlus.Demo
             Fall(sync_state.fall);
             playerForce = sync_state.playerForce;
             rushDir = sync_state.rushDir;
+            life = sync_state.life;
             Rush(sync_state.rush);
             UseWeapon1stFunc(sync_state.useWeapon1st);
             UseWeapon2ndFunc(sync_state.useWeapon2nd);
@@ -581,6 +583,7 @@ namespace NetcodePlus.Demo
         public bool useWeapon1st;
         public bool useWeapon2nd;
         public float hp;
+        public float life;
         public Vector3 playerForce;
         public Vector2 rushDir;
         public bool onRush;
@@ -589,6 +592,7 @@ namespace NetcodePlus.Demo
         {
             serializer.SerializeValue(ref playerForce);
             serializer.SerializeValue(ref hp);
+            serializer.SerializeValue(ref life);
             serializer.SerializeValue(ref timing);
             serializer.SerializeValue(ref position);
             serializer.SerializeValue(ref move);

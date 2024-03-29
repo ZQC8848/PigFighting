@@ -146,7 +146,7 @@ MonoBehaviour:
   jump_force: 10
   maxJumpCount: 3
   hp_max: 100
-  hp: 0
+  hp: 100
   life: 0
   life_max: 2
   rushDir: {x: 0, y: 0, z: 0}
