@@ -21,10 +21,13 @@ namespace NetcodePlus.Demo
         public float life;
         public float life_max;
         private float forceRecession = 1.5f;
-        private float rushDistance = 5f;
-        private float rushTime = 0.2f;
+        private float rushDistance = 10f;
+        private float rushTime = 0.3f;
         private float rushTimeCoolDown = 1f;
         public Vector3 rushDir;
+        public GameObject rushGhost;
+        public float ghostNum = 10;
+        private float ghostTime = 0;
         public bool Ondie = false;
 
         //[Header("Synchonization Parameters")]
@@ -78,8 +81,9 @@ namespace NetcodePlus.Demo
             col = GetComponent<Collider2D>();
             sync_state.position = transform.position;
             hp = hp_max;
-            life = life_max; 
-            weaponHandler = transform.Find("WeaponHandler");
+            life = life_max;
+            //weaponHandler = transform.Find("WeaponHandler");
+            weaponHandler = transform.Find("LiveBody").Find("WeaponHandler");
             playerCamera = GetComponentInChildren<Camera>();
             animator = transform.Find("LiveBody").GetChild(0).GetComponent<Animator>();
         }
@@ -481,6 +485,14 @@ namespace NetcodePlus.Demo
                 // 使用插值函数更新位置
                 transform.position = Vector2.Lerp(startPosition, targetPosition, ratio);
                 elapsedTime += Time.deltaTime; // 更新已过时间
+
+                if(Time.time > ghostTime)
+                {
+                    GameObject ghost =  Instantiate(rushGhost, transform.position,Quaternion.identity);
+                    ghost.transform.localScale = new Vector3(currenFacing*0.65f, 0.65f, 1f);
+                    ghostTime = Time.time + rushTime / ghostNum;
+                }
+                
                 yield return null; // 等待下一帧
             }
 

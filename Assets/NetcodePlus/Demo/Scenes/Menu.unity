@@ -1822,9 +1822,9 @@ MonoBehaviour:
   - value: blue
     title: Pink
   - value: red
-    title: Red
+    title: Grey
   - value: green
-    title: Green
+    title: Brown
   - value: yellow
     title: Yellow
   select_text: {fileID: 1111322522}
