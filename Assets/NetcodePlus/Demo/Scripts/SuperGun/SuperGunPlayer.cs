@@ -176,6 +176,7 @@ namespace NetcodePlus.Demo
             }
 
             Vector3 move = new Vector3(cmove.x * move_speed, rigid.velocity.y, 0);
+            animator.SetFloat("velocityY",rigid.velocity.y);
 
             //Rotate controls to camera angle
             CameraPlayer cam = CameraPlayer.Get();
@@ -321,6 +322,7 @@ namespace NetcodePlus.Demo
         }
         private void DoJump()
         {
+            animator.SetBool("jump", true);
             rigid.velocity = new Vector3(rigid.velocity.x, jump_force);
         }
 
@@ -345,10 +347,12 @@ namespace NetcodePlus.Demo
             //Debug.Log(col.IsTouchingLayers());
             if (col.IsTouchingLayers(groundLayer))
             {
+                animator.SetBool("jump", false);
                 return true;
             }
             else
             {
+                animator.SetBool("jump", true);
                 return false;
             }
         }
