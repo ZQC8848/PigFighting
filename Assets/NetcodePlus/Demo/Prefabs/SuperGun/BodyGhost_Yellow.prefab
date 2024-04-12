@@ -13,7 +13,7 @@ GameObject:
   - component: {fileID: 1409570071183945187}
   - component: {fileID: -4625185976468105575}
   m_Layer: 7
-  m_Name: PinkBodyGhost
+  m_Name: BodyGhost_Yellow
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -75,7 +75,7 @@ SpriteRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: -1
-  m_Sprite: {fileID: 21300000, guid: 555e272230c6e864aa1ed21ad1d308c9, type: 3}
+  m_Sprite: {fileID: 21300000, guid: 402acc0e99861694fbf2bd4e86a1e41b, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0

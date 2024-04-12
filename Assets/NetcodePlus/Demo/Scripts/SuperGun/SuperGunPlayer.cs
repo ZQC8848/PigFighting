@@ -31,10 +31,10 @@ namespace NetcodePlus.Demo
         public bool Ondie = false;
 
         //[Header("Synchonization Parameters")]
-        public float sync_refresh_rate = 0.02f;
-        public float sync_threshold = 0.1f;
-        public float sync_interpolate = 5f;
-        public float sync_teleportTime = 0.2f;
+        private float sync_refresh_rate = 0.02f;
+        private float sync_threshold = 0.1f;
+        private float sync_interpolate = 2f;
+        private float sync_teleportTime = 0.2f;
 
         [Header("Cooling Time")]
         public float firstFunc_timer = 0;
@@ -64,7 +64,10 @@ namespace NetcodePlus.Demo
 
         private PlayerControl2D controls;
         private Transform weaponHandler;
-        private Rigidbody2D rigid;
+
+        [HideInInspector]
+        public Rigidbody2D rigid;
+
         private Collider2D col;
         private SNetworkActions actions;
 
@@ -406,6 +409,7 @@ namespace NetcodePlus.Demo
 
             hp = hp_max;
             this.transform.position = spawn.transform.position;
+            this.rigid.velocity.Set(0,0);
 
             if (IsOwner)
             {
@@ -486,7 +490,7 @@ namespace NetcodePlus.Demo
                 transform.position = Vector2.Lerp(startPosition, targetPosition, ratio);
                 elapsedTime += Time.deltaTime; // 更新已过时间
 
-                if(Time.time > ghostTime)
+                if(Time.time > ghostTime && !Ondie)
                 {
                     GameObject ghost =  Instantiate(rushGhost, transform.position,Quaternion.identity);
                     ghost.transform.localScale = new Vector3(currenFacing*0.65f, 0.65f, 1f);

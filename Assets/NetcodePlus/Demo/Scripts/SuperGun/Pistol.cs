@@ -42,7 +42,7 @@ public class Pistol : Weapons
     {
         firePoint = transform.Find("FirePoint");
         bulletPool = GameObject.Find("BulletsPool").transform;
-        gunPlayer = transform.parent.parent.GetComponent<SuperGunPlayer>();
+        gunPlayer = transform.parent.parent.parent.GetComponent<SuperGunPlayer>();
     }
     public override void FisrtFunc()
     {
@@ -74,7 +74,6 @@ public class Pistol : Weapons
         GunBullet _bullet = bullet.GetComponent<GunBullet>();
         _bullet.SetDamage(redBulletDamage);
         _bullet.SetImpactForce(redBulletImpactForce*GetBulletDir());
-
         AddRecoil();
     }
 
@@ -86,9 +85,10 @@ public class Pistol : Weapons
         rb.velocity = GetBulletDir() * greenBulletSpeed;
 
         GunBullet _bullet = bullet.GetComponent<GunBullet>();
+        _bullet.gameObject.transform.localScale *= 5f;
         _bullet.SetDamage(greenBulletDamage);
         _bullet.SetImpactForce(greenBulletImpactForce*GetBulletDir());
-
+        
         AddRecoil();
     }
 

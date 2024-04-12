@@ -118,10 +118,9 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
+  - {fileID: 8146445003931370275}
   - {fileID: 7839483307895407394}
   - {fileID: 8158462298030676398}
-  - {fileID: 8146445003931370275}
-  - {fileID: 1346587522334407186}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &8493959364842781827
@@ -199,6 +198,9 @@ MonoBehaviour:
   life: 0
   life_max: 2
   rushDir: {x: 0, y: 0, z: 0}
+  rushGhost: {fileID: 5316471772591757417, guid: 33fa1e8489b78e44cbdc77523133906f,
+    type: 3}
+  ghostNum: 10
   Ondie: 0
   sync_refresh_rate: 0.02
   sync_threshold: 0.1
@@ -218,6 +220,7 @@ MonoBehaviour:
   poinerTrans: {fileID: 0}
   amierTrans: {fileID: 0}
   animator: {fileID: 0}
+  rigid: {fileID: 0}
 --- !u!61 &264299031314763231
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -366,7 +369,7 @@ GameObject:
   - component: {fileID: 1654532529562659720}
   - component: {fileID: 1620704890914424296}
   m_Layer: 7
-  m_Name: Capsule
+  m_Name: DeathBody
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -381,8 +384,8 @@ Transform:
   m_GameObject: {fileID: 5193349299547346850}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalPosition: {x: 0, y: -0.05, z: 0}
+  m_LocalScale: {x: 1.1, y: 0.92, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 8158462298030676398}
@@ -428,8 +431,7 @@ SpriteRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
-  m_Sprite: {fileID: -9095717837082945937, guid: 207ee8102dd4143d288186ef0be518ee,
-    type: 3}
+  m_Sprite: {fileID: 21300000, guid: 57209f8d2b3b3f249a25f132c387282f, type: 3}
   m_Color: {r: 0.5849056, g: 0.5849056, b: 0.5849056, a: 1}
   m_FlipX: 0
   m_FlipY: 0
@@ -465,9 +467,9 @@ Transform:
   m_GameObject: {fileID: 5657286752114038410}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
+  m_LocalPosition: {x: 0.1, y: 0, z: 0}
+  m_LocalScale: {x: 0.7, y: 0.7, z: 0.7}
+  m_ConstrainProportionsScale: 1
   m_Children:
   - {fileID: 1654532529562659720}
   m_Father: {fileID: 8850506081956271130}
@@ -501,7 +503,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 8850506081956271130}
+  m_Father: {fileID: 7839483307895407394}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &6692503566435842544
 GameObject:
@@ -641,6 +643,7 @@ Transform:
   m_Children:
   - {fileID: 227234486587893947}
   - {fileID: 2257074146163461350}
+  - {fileID: 1346587522334407186}
   m_Father: {fileID: 8850506081956271130}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!95 &6238814196769271434

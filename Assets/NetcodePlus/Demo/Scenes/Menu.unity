@@ -1547,11 +1547,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   options:
   - value: blue
-    title: Blue
+    title: Pink
   - value: red
-    title: Red
+    title: Grey
   - value: green
-    title: Green
+    title: Brown
   - value: yellow
     title: Yellow
   select_text: {fileID: 427406733}
@@ -6032,14 +6032,14 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   options:
+  - value: 40
+    title: SuperGun
   - value: 20
     title: Tank
   - value: 30
     title: Puzzle
   - value: 10
     title: Simple
-  - value: 40
-    title: SuperGun
   select_text: {fileID: 254294741}
 --- !u!1 &1727868874
 GameObject:

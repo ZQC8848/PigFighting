@@ -7,7 +7,7 @@ public class PlatForm2D : MonoBehaviour
 {
     Collider2D platformCollider;
 
-    private float passthroughTime=0.25f;
+    private float passthroughTime=1f;
     public List<SuperGunPlayer> onPlatPlayerList;
     SuperGunPlayer player;
 

@@ -41,7 +41,6 @@ namespace NetcodePlus.Demo
             {
                 fillImage.color = color;
                 slider.value = currentHealth / maxHealth;
-                Debug.Log(fillImage.fillAmount);
             }
         }
 
