@@ -1,7 +1,10 @@
 using NetcodePlus;
 using NetcodePlus.Demo;
+using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Xml.Serialization;
+using Unity.Mathematics;
 using Unity.Netcode;
 using UnityEngine;
 
@@ -9,30 +12,41 @@ public class RandomEventOnServer : SNetworkObject
 {
     public bool isServer;
     float gameTimer = 0;
-    float createBoxTime = 10f;
-    float createBoxProbability = 0.8f;
-
-    bool doCreateBox;
+    float createBoxTime = 5f;
+    float BoxTimer = 0;
+    float createBoxProbability = 1f;
 
     public GameObject ItemBox;
     public List<Transform> initBoxPoints;
 
-    private SuperGunPlayerState sync_state = new SuperGunPlayerState();
+    public SuperGunPlayer superGunPlayer;
 
-    private SNetworkActions actions;
+    static public RandomEventOnServer instance;
     protected override void Start()
     {
-        base.Start();
-        actions = new SNetworkActions();
-        actions.Register("CreateBox", CreareItemBox);
-        actions.RegisterSerializable("sync", ReceiveSync, NetworkDelivery.Unreliable);
-
+        Invoke("LateInitData", 1);
+        
         isServer = TheNetwork.Get().IsServer;
+        instance = this;
+    }
+    void LateInitData()
+    {
+        GameData gdata = GameData.Get();
+        PlayerData player = gdata.GetPlayer(TheNetwork.Get().PlayerID);
+        Debug.Log("playerId=" + player.player_id);
+        superGunPlayer = SuperGunPlayer.Get(player.player_id);
+        if (superGunPlayer == null)
+        {
+            Debug.Log("player is null");
+        }
+        else
+        {
+            Debug.Log("playerId=" + player.player_id);
+        }
     }
     private void Update()
     {
         UpDateServerClint();
-        UpdateOtherClint();
     }
     void UpDateServerClint()
     {
@@ -40,63 +54,23 @@ public class RandomEventOnServer : SNetworkObject
             return;
 
         gameTimer += Time.deltaTime;
+        BoxTimer += Time.deltaTime;
 
-        sync_state.timing = sync_state.timing + 1;
-
-        if (gameTimer > createBoxTime)
+        if (BoxTimer >= createBoxTime)
         {
-            createBoxTime += gameTimer;
-            if (Random.value < createBoxProbability)
+            BoxTimer = 0;
+
+            if (UnityEngine.Random.value < createBoxProbability)
             {
-                doCreateBox = true;
-                DoCreareItemBox(doCreateBox);
+                int index = UnityEngine.Random.Range(1, initBoxPoints.Count);//INDEX START WITH 1 BUT NOT 0 !!! 
+                superGunPlayer.eventData.indexOfItemBox = index;
             }
         }
-        sync_state.doCreateBox = doCreateBox;
-        actions?.Trigger("sync", sync_state); // ReceiveSync(sync_state)
-    }
-    void UpdateOtherClint()
-    {
-        if (isServer)
-            return;
-
-        DoCreareItemBox(sync_state.doCreateBox);
-    }
-    private void ReceiveSync(SerializedData sdata)
-    {
-        if (IsOwner)
-            return;
-
-        SuperGunPlayerState state = sdata.Get<SuperGunPlayerState>();
-        if (state.timing < sync_state.timing)
-            return; //Old timing, ignore package, this means packages arrived in wrong order, prevent glitch
-
-        sync_state = state;
-    }
-    void DoCreareItemBox(bool createBox)
-    {
-        if(createBox)
-        {
-            actions?.Trigger("CreateBox");
-            doCreateBox = false;
-        }
-    }
-    void CreareItemBox()
-    {
-        Transform initPoint = initBoxPoints[(int)Random.value * 10 % initBoxPoints.Count];
-
-        Instantiate(ItemBox, initPoint);
     }
 
-    [System.Serializable]
-    public struct SuperGunPlayerState : INetworkSerializable
+    public void CreateItemBox(int index)
     {
-        public ulong timing; //Increased by 1 each frame
-        public bool doCreateBox;
-
-        public void NetworkSerialize<T>(BufferSerializer<T> serializer) where T : IReaderWriter
-        {
-            serializer.SerializeValue(ref doCreateBox);
-        }
+        Instantiate(ItemBox, initBoxPoints[index]);
+        superGunPlayer.eventData.indexOfItemBox = -1;
     }
 }

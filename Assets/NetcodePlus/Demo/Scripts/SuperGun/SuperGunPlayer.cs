@@ -76,6 +76,14 @@ namespace NetcodePlus.Demo
 
         private static List<SuperGunPlayer> superGunPlayer_list = new List<SuperGunPlayer>();
 
+        [HideInInspector]
+        public struct publicEventData
+        {
+            public int indexOfItemBox;
+        };
+        [HideInInspector]
+        public publicEventData eventData;
+
         protected override void Awake()
         {
             base.Awake();
@@ -85,6 +93,7 @@ namespace NetcodePlus.Demo
             sync_state.position = transform.position;
             hp = hp_max;
             life = life_max;
+            eventData.indexOfItemBox = -1;
             //weaponHandler = transform.Find("WeaponHandler");
             weaponHandler = transform.Find("LiveBody").Find("WeaponHandler");
             playerCamera = GetComponentInChildren<Camera>();
@@ -110,6 +119,7 @@ namespace NetcodePlus.Demo
             actions.RegisterVector("rush", DoRush);
             actions.Register("kill", DoKill);
             actions.Register("die", DoDie);
+            actions.RegisterInt("publicEvent", DoTriggerPublicEvent);
             actions.RegisterSerializable("sync", ReceiveSync, NetworkDelivery.Unreliable);
         }
 
@@ -204,6 +214,7 @@ namespace NetcodePlus.Demo
 
             UseWeapon1stFunc(isFunc1stPressed);
             UseWeapon2ndFunc(isFunc2ndPressed);
+            TriggerPublicEvent(eventData.indexOfItemBox);
 
             //Refresh Timer
             refresh_timer += Time.deltaTime;
@@ -224,6 +235,7 @@ namespace NetcodePlus.Demo
             sync_state.useWeapon1st = isFunc1stPressed;
             sync_state.useWeapon2nd = isFunc2ndPressed;
             sync_state.playerForce = playerForce;
+            sync_state.publicEventIndex = eventData.indexOfItemBox;
             //sync_jumpCount = currentJumpCount;
 
             actions?.Trigger("sync", sync_state); // ReceiveSync(sync_state)
@@ -265,6 +277,7 @@ namespace NetcodePlus.Demo
             Rush(sync_state.rush);
             UseWeapon1stFunc(sync_state.useWeapon1st);
             UseWeapon2ndFunc(sync_state.useWeapon2nd);
+            TriggerPublicEvent(sync_state.publicEventIndex);
         }
         IEnumerator OffsetMove(Vector3 targetPos, float offsetTime)
         {
@@ -463,11 +476,6 @@ namespace NetcodePlus.Demo
            // Debug.Log("rushDir:"+ rushDir);
             StartCoroutine(IEnumRush(_rushDir));
             rush_timer = 0;
-            if (!IsOwner)
-            {
-                Debug.Log("other player DO rush");
-                Debug.Log("rush Dir = " + rushDir);
-            }
         }
         IEnumerator IEnumRush(Vector3 _rushDir)
         {
@@ -569,6 +577,18 @@ namespace NetcodePlus.Demo
         {
             weapon.SecondFunc();
         }
+        void TriggerPublicEvent(int index)
+        {
+            if (index <= 0)
+                return;
+
+            actions?.Trigger("publicEvent", index);
+        }
+        private void DoTriggerPublicEvent(int index)
+        {
+            RandomEventOnServer.instance.CreateItemBox(index);
+            Debug.Log("createBox -- " + index);
+        }
         private void ReceiveSync(SerializedData sdata)
         {
             if (IsOwner)
@@ -614,7 +634,7 @@ namespace NetcodePlus.Demo
         public Vector3 playerForce;
         public Vector2 rushDir;
         public bool onRush;
-
+        public int publicEventIndex;
         public void NetworkSerialize<T>(BufferSerializer<T> serializer) where T : IReaderWriter
         {
             serializer.SerializeValue(ref playerForce);
@@ -633,6 +653,7 @@ namespace NetcodePlus.Demo
             serializer.SerializeValue(ref hp);
             serializer.SerializeValue(ref rushDir);
             serializer.SerializeValue(ref onRush);
+            serializer.SerializeValue(ref publicEventIndex);
         }
     }
 }
