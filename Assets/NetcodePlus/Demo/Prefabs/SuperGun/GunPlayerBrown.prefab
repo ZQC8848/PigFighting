@@ -14,7 +14,7 @@ GameObject:
   - component: {fileID: -8515670509798261620}
   - component: {fileID: 2957964787691658966}
   - component: {fileID: 2277779625799653170}
-  m_Layer: 7
+  m_Layer: 13
   m_Name: GunPlayerBrown
   m_TagString: Player
   m_Icon: {fileID: 0}
@@ -118,10 +118,6 @@ MonoBehaviour:
     type: 3}
   ghostNum: 10
   Ondie: 0
-  sync_refresh_rate: 0.02
-  sync_threshold: 0.1
-  sync_interpolate: 5
-  sync_teleportTime: 0.2
   firstFunc_timer: 0
   secondFunc_timer: 0
   rush_timer: 0
@@ -192,7 +188,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1253289903886317198}
   - component: {fileID: 1390878769771446}
-  m_Layer: 7
+  m_Layer: 13
   m_Name: Hand
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -277,7 +273,7 @@ GameObject:
   - component: {fileID: 2937871754056863478}
   - component: {fileID: 5530284477271693966}
   - component: {fileID: 4075150132644392579}
-  m_Layer: 7
+  m_Layer: 13
   m_Name: BrownBody
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -381,7 +377,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 3132270904717773410}
-  m_Layer: 7
+  m_Layer: 13
   m_Name: DeathBody
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -414,7 +410,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1680232851162487129}
   - component: {fileID: 4202705235455251436}
-  m_Layer: 7
+  m_Layer: 13
   m_Name: LiveBody
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -469,7 +465,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 5398774418525177647}
-  m_Layer: 7
+  m_Layer: 13
   m_Name: WeaponHandler
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -502,7 +498,7 @@ GameObject:
   - component: {fileID: 4298267144790364287}
   - component: {fileID: 8231582629142639405}
   - component: {fileID: 6512800708755966758}
-  m_Layer: 7
+  m_Layer: 13
   m_Name: PlayerCamera
   m_TagString: MainCamera
   m_Icon: {fileID: 0}
@@ -593,7 +589,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1594821754733814833}
   - component: {fileID: 6132541133460962848}
-  m_Layer: 7
+  m_Layer: 13
   m_Name: DeathBody
   m_TagString: Untagged
   m_Icon: {fileID: 0}

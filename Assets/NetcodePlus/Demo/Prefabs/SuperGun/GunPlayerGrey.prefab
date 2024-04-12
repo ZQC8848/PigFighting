@@ -10,7 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 6188054403124613331}
   - component: {fileID: 5953387575231977103}
-  m_Layer: 7
+  m_Layer: 13
   m_Name: Hand
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -98,7 +98,7 @@ GameObject:
   - component: {fileID: 1733559503206803376}
   - component: {fileID: -7330938523797249618}
   - component: {fileID: 868710144824855646}
-  m_Layer: 7
+  m_Layer: 13
   m_Name: GunPlayerGrey
   m_TagString: Player
   m_Icon: {fileID: 0}
@@ -202,10 +202,6 @@ MonoBehaviour:
     type: 3}
   ghostNum: 10
   Ondie: 0
-  sync_refresh_rate: 0.02
-  sync_threshold: 0.1
-  sync_interpolate: 5
-  sync_teleportTime: 0.2
   firstFunc_timer: 0
   secondFunc_timer: 0
   rush_timer: 0
@@ -275,7 +271,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 162880745089012114}
-  m_Layer: 7
+  m_Layer: 13
   m_Name: WeaponHandler
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -306,7 +302,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1609622994161494294}
-  m_Layer: 7
+  m_Layer: 13
   m_Name: DeathBody
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -340,7 +336,7 @@ GameObject:
   - component: {fileID: 3203317992603763343}
   - component: {fileID: 1058621483111002819}
   - component: {fileID: 1259268495942603663}
-  m_Layer: 7
+  m_Layer: 13
   m_Name: GreyBody
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -445,7 +441,7 @@ GameObject:
   m_Component:
   - component: {fileID: 8016503279728292829}
   - component: {fileID: 6184466023763720788}
-  m_Layer: 7
+  m_Layer: 13
   m_Name: DeathBody
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -529,7 +525,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1162764332586516548}
   - component: {fileID: 347905539851509389}
-  m_Layer: 7
+  m_Layer: 13
   m_Name: LiveBody
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -586,7 +582,7 @@ GameObject:
   - component: {fileID: 4573613180848606050}
   - component: {fileID: 5160966906913771574}
   - component: {fileID: 3044936764005321323}
-  m_Layer: 7
+  m_Layer: 13
   m_Name: PlayerCamera
   m_TagString: MainCamera
   m_Icon: {fileID: 0}

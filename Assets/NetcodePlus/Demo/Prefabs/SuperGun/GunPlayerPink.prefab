@@ -9,7 +9,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 4429656185323483754}
-  m_Layer: 7
+  m_Layer: 13
   m_Name: DeathBody
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -41,7 +41,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 5905536220480678867}
-  m_Layer: 7
+  m_Layer: 13
   m_Name: WeaponHandler
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -74,7 +74,7 @@ GameObject:
   - component: {fileID: 1743722207451286250}
   - component: {fileID: 5780005020131289029}
   - component: {fileID: 2831615073106983857}
-  m_Layer: 7
+  m_Layer: 13
   m_Name: PlayerCamera
   m_TagString: MainCamera
   m_Icon: {fileID: 0}
@@ -169,7 +169,7 @@ GameObject:
   - component: {fileID: 6146148811593958836}
   - component: {fileID: -498268946711728544}
   - component: {fileID: 457721312434236376}
-  m_Layer: 7
+  m_Layer: 13
   m_Name: GunPlayerPink
   m_TagString: Player
   m_Icon: {fileID: 0}
@@ -273,10 +273,6 @@ MonoBehaviour:
     type: 3}
   ghostNum: 10
   Ondie: 0
-  sync_refresh_rate: 0.02
-  sync_threshold: 0.1
-  sync_interpolate: 5
-  sync_teleportTime: 0.2
   firstFunc_timer: 0
   secondFunc_timer: 0
   rush_timer: 0
@@ -291,6 +287,7 @@ MonoBehaviour:
   poinerTrans: {fileID: 0}
   amierTrans: {fileID: 0}
   animator: {fileID: 0}
+  rigid: {fileID: 0}
 --- !u!61 &457721312434236376
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -346,7 +343,7 @@ GameObject:
   m_Component:
   - component: {fileID: 6005820513473808461}
   - component: {fileID: 7303749794155767521}
-  m_Layer: 7
+  m_Layer: 13
   m_Name: DeathBody
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -430,7 +427,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1049750836877684237}
   - component: {fileID: 2901429527815594056}
-  m_Layer: 7
+  m_Layer: 13
   m_Name: LiveBody
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -487,7 +484,7 @@ GameObject:
   - component: {fileID: 3184483812939998010}
   - component: {fileID: 8404741304838429073}
   - component: {fileID: 6232035380343962006}
-  m_Layer: 7
+  m_Layer: 13
   m_Name: PinkBody
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -592,7 +589,7 @@ GameObject:
   m_Component:
   - component: {fileID: 5193604208844679045}
   - component: {fileID: 6181008673255907387}
-  m_Layer: 7
+  m_Layer: 13
   m_Name: Hand
   m_TagString: Untagged
   m_Icon: {fileID: 0}

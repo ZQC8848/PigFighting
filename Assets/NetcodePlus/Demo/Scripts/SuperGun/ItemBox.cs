@@ -23,8 +23,7 @@ public class ItemBox : MonoBehaviour
             SeperateBoxes.gameObject.SetActive(true);
             foreach (Transform child in SeperateBoxes)
             {
-                child.gameObject.GetComponent<Rigidbody2D>().velocity = (child.position - SeperateBoxes.position)*10;
-                Debug.Log("inpluse fore = " + (child.position - SeperateBoxes.position));
+                child.gameObject.GetComponent<Rigidbody2D>().velocity = (child.position - SeperateBoxes.position)*5;
             }
         }
     }

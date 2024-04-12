@@ -482,8 +482,6 @@ namespace NetcodePlus.Demo
             float elapsedTime = 0; // 已过时间
             Vector2 startPosition = transform.position; // 开始位置
             Vector2 targetPosition = startPosition + (Vector2)_rushDir.normalized * rushDistance; // 目标位置
-            Debug.Log("rushDir = :"+_rushDir);
-            Debug.Log("rushDir normal:" + rushDir.normalized);
             if(IsOwner)
             {
                 sync_state.onRush = true;
