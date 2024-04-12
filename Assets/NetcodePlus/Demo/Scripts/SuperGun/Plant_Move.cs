@@ -1,3 +1,5 @@
+using NetcodePlus;
+using NetcodePlus.Demo;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -20,7 +22,11 @@ public class Plant_Move : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if(moveToRight && !moveToLeft)
+        if(!TheNetwork.Get().IsServer)
+        {
+            return;
+        }
+        if (moveToRight && !moveToLeft)
         {
             moveTime += Time.deltaTime;
             MoveRightOrUp();
