@@ -7,7 +7,8 @@ public class GunBullet : MonoBehaviour
 {
     public float damageValue;
     public Vector3 impactForce;
-
+    int ownerPlayerId;
+        
     private void Start()
     {
         Invoke("SelfDestory", 3);
@@ -15,7 +16,7 @@ public class GunBullet : MonoBehaviour
     private void OnCollisionEnter2D(Collision2D collision)
     {
         SuperGunPlayer superGunPlayer = collision.gameObject.GetComponent<SuperGunPlayer>();
-        if (superGunPlayer != null)
+        if (superGunPlayer != null && superGunPlayer.PlayerID != ownerPlayerId)
         {
             superGunPlayer.Damage(damageValue);
             superGunPlayer.SetForce(impactForce);
@@ -24,6 +25,10 @@ public class GunBullet : MonoBehaviour
         SelfDestory();
     }
 
+    public void SetOwnerPlayerId(int id)
+    {
+        ownerPlayerId = id;
+    }
     public void SetDamage(float damage)
     {
         damageValue = damage;

@@ -508,7 +508,8 @@ namespace NetcodePlus.Demo
 
             // 确保物体完全移动到目标位置
             transform.position = targetPosition;
-            
+            rigid.velocity = new Vector2(rigid.velocity.x,0);
+
             if (IsOwner)
             {
                 sync_state.onRush = false;

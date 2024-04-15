@@ -69,11 +69,12 @@ public class Pistol : Weapons
     {
         GameObject bullet = Instantiate(redBullet, firePoint.position ,firePoint.rotation, bulletPool);
         Rigidbody2D rb = bullet.GetComponent<Rigidbody2D>();
-        rb.velocity = GetBulletDir() * redBulletSpeed;
+        rb.velocity = GetBulletDir() * redBulletSpeed + new Vector3(gunPlayer.rigid.velocity.x,0,0);
 
         GunBullet _bullet = bullet.GetComponent<GunBullet>();
         _bullet.SetDamage(redBulletDamage);
         _bullet.SetImpactForce(redBulletImpactForce*GetBulletDir());
+        _bullet.SetOwnerPlayerId(gunPlayer.PlayerID);
         AddRecoil();
     }
 
@@ -82,13 +83,13 @@ public class Pistol : Weapons
         GameObject bullet = Instantiate(greenBullet, firePoint.position +  GetBulletDir(), firePoint.rotation, bulletPool);
 
         Rigidbody2D rb = bullet.GetComponent<Rigidbody2D>();
-        rb.velocity = GetBulletDir() * greenBulletSpeed;
+        rb.velocity = GetBulletDir() * greenBulletSpeed + new Vector3(gunPlayer.rigid.velocity.x, 0, 0);
 
         GunBullet _bullet = bullet.GetComponent<GunBullet>();
         _bullet.gameObject.transform.localScale *= 5f;
         _bullet.SetDamage(greenBulletDamage);
         _bullet.SetImpactForce(greenBulletImpactForce*GetBulletDir());
-        
+        _bullet.SetOwnerPlayerId(gunPlayer.PlayerID);
         AddRecoil();
     }
 
@@ -97,11 +98,11 @@ public class Pistol : Weapons
         gunFacing = i;
     }
 
-    private void AddRecoil()
+    private void AddRecoil()//do not add reciol to avoid bug
     {
-        Vector3 forceDir = -GetBulletDir();
+        //Vector3 forceDir = -GetBulletDir();
 
-        gunPlayer.SetForce(forceDir * recoil);
+        //gunPlayer.SetForce(forceDir * recoil);
     }
 
     public Vector3 GetBulletDir()

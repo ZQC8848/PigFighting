@@ -716,8 +716,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   auto_spawn: 0
-  network_id: 0
-  prefab_id: 0
+  network_id: 3632303110792049068
+  prefab_id: 3632303110792049068
   is_scene: 0
 --- !u!114 &5784778278896032056
 MonoBehaviour:
