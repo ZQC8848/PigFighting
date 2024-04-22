@@ -59,6 +59,8 @@ namespace NetcodePlus.Demo
         [Header("Animator")]
         public Animator animator;
 
+        private UIPanelAbovePlayer uiPanel;
+
         private int currentJumpCount;
         private int currenFacing = 0;
 
@@ -98,6 +100,7 @@ namespace NetcodePlus.Demo
             weaponHandler = transform.Find("LiveBody").Find("WeaponHandler");
             playerCamera = GetComponentInChildren<Camera>();
             animator = transform.Find("LiveBody").GetChild(0).GetComponent<Animator>();
+            uiPanel = transform.Find("PlayerCanvas").Find("Panel").GetComponent<UIPanelAbovePlayer>();
         }
         protected override void OnDestroy()
         {
@@ -309,14 +312,15 @@ namespace NetcodePlus.Demo
                     transform.localScale = new Vector3(1, 1, 1);
                     currenFacing = 1;
                     weapon.SetGunFacing(currenFacing);
+                    uiPanel.ReverseScale(currenFacing);
                 }
                 else
                 {
                     transform.localScale = new Vector3(-1, 1, 1);
                     currenFacing = -1; 
                     weapon.SetGunFacing(currenFacing);
+                    uiPanel.ReverseScale(currenFacing);
                 }
-
             }
         }
         private void Jump(bool isJumpPressed)
@@ -405,7 +409,7 @@ namespace NetcodePlus.Demo
         {
             hp -= damage;
             Debug.Log(PlayerID + "hp:" + hp);
-            if (hp < 0)
+            if (hp <= 0)
                 Kill();
         }
         public void Kill()
@@ -423,7 +427,7 @@ namespace NetcodePlus.Demo
             hp = hp_max;
             this.transform.position = spawn.transform.position;
             this.rigid.velocity.Set(0,0);
-
+            
             if (IsOwner)
             {
                 EquipWeapon("pistol");

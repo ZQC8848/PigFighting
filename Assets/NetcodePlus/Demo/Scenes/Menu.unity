@@ -1819,7 +1819,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   options:
-  - value: blue
+  - value: pink
     title: Pink
   - value: red
     title: Grey

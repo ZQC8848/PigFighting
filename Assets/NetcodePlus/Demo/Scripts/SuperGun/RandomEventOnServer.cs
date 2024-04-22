@@ -62,7 +62,8 @@ public class RandomEventOnServer : SNetworkObject
 
             if (UnityEngine.Random.value < createBoxProbability)
             {
-                int index = UnityEngine.Random.Range(1, initBoxPoints.Count);//INDEX START WITH 1 BUT NOT 0 !!! 
+                int index = UnityEngine.Random.Range(1, 1)*100 + UnityEngine.Random.Range(1, initBoxPoints.Count);//INDEX START WITH 1 BUT NOT 0 !!! 
+                //9900-100 is eventNumber string and 99-1 is postion string
                 superGunPlayer.eventData.indexOfItemBox = index;
             }
         }
@@ -70,7 +71,19 @@ public class RandomEventOnServer : SNetworkObject
 
     public void CreateItemBox(int index)
     {
-        Instantiate(ItemBox, initBoxPoints[index]);
+        GameObject itemBox =  Instantiate(ItemBox, initBoxPoints[index%100]);
+        itemBox.transform.GetChild(0).GetComponent<ItemBox>().SetEventSerial(index / 100);
         superGunPlayer.eventData.indexOfItemBox = -1;
+    }
+
+    public void TriggerEvent(int index,SuperGunPlayer player)
+    {
+        switch(index)
+        {
+            case 1:
+                {
+                    player.EquipWeapon("magicstick");
+                }break;
+        }
     }
 }

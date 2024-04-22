@@ -1,3 +1,4 @@
+using NetcodePlus.Demo;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -5,7 +6,8 @@ using UnityEngine;
 public class ItemBox : MonoBehaviour
 {
     private float SelfDestoryTime = 10;
-    
+
+    public int eventSerial;
     private void Start()
     {
         Invoke("SelfDestory", SelfDestoryTime);
@@ -14,17 +16,20 @@ public class ItemBox : MonoBehaviour
     {
         Destroy(gameObject.transform.parent.gameObject);
     }
+    public void SetEventSerial(int _eventSerial)
+    {
+        this.eventSerial = _eventSerial;
+    }
+    private void TrrigerEvent(SuperGunPlayer player)
+    {
+        RandomEventOnServer.instance.TriggerEvent(eventSerial, player);
+    }
     private void OnCollisionEnter2D(Collision2D collision)
     {
         if (collision.gameObject.CompareTag("Player"))
         {
-            this.gameObject.SetActive(false);
-            Transform SeperateBoxes = this.transform.parent.Find("SeperateBoxes");
-            SeperateBoxes.gameObject.SetActive(true);
-            foreach (Transform child in SeperateBoxes)
-            {
-                child.gameObject.GetComponent<Rigidbody2D>().velocity = (child.position - SeperateBoxes.position)*Random.Range(3,8);
-            }
+            TrrigerEvent(collision.gameObject.GetComponent<SuperGunPlayer>());
+            SelfDestory();
         }
     }
 }

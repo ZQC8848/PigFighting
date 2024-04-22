@@ -10,9 +10,9 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 57a5ce4c87f3c944faf4ac1bc0f8cf47, type: 3}
-  m_Name: GunPlayerGreen
+  m_Name: GunPlayerBrown
   m_EditorClassIdentifier: 
   mode: 40
-  id: green
+  id: brown
   prefab: {fileID: 3494675090739297473, guid: de03e04c626259546b8c367dc8c2dbd3, type: 3}
-  color: {r: 0.15390277, g: 1, b: 0, a: 1}
+  color: {r: 1, g: 0.6020568, b: 0, a: 1}
