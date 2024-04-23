@@ -62,6 +62,7 @@ public class RandomEventOnServer : SNetworkObject
 
             if (UnityEngine.Random.value < createBoxProbability)
             {
+                //UnityEngine.Random.InitState();
                 int index = UnityEngine.Random.Range(1, 1)*100 + UnityEngine.Random.Range(1, initBoxPoints.Count);//INDEX START WITH 1 BUT NOT 0 !!! 
                 //9900-100 is eventNumber string and 99-1 is postion string
                 superGunPlayer.eventData.indexOfItemBox = index;

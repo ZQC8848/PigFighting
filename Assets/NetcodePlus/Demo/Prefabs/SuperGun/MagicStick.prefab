@@ -168,10 +168,10 @@ MonoBehaviour:
   magicBullet: {fileID: 3518617814632203656, guid: 584da970fdc44124a86eb0aa70d405c7,
     type: 3}
   weaponCount: 0
-  firePoint: {fileID: 0}
+  firePoint: {fileID: 6706505429580904946}
   bulletPool: {fileID: 0}
   minX_distance: 15
-  maxX_distance: 5
+  maxX_distance: 30
   Y_range: 5
-  moveTime: 3
+  moveTime: 1
   gunPlayer: {fileID: 0}

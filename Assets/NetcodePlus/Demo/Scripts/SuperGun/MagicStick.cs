@@ -30,7 +30,7 @@ public class MagicStick : Weapons
     public override void FisrtFunc()
     {
         Debug.Log("use Magic 1!!");
-        GameObject bullet =  Instantiate(magicBullet);
+        GameObject bullet =  Instantiate(magicBullet,firePoint.position,firePoint.rotation,bulletPool);
         bullet.transform.DOLocalMove(firePoint.position + new Vector3(gunFacing * Random.Range(minX_distance, maxX_distance), Random.Range(-Y_range, Y_range), 0f),moveTime);
     }
     public override void SecondFunc()
