@@ -82,16 +82,9 @@ public class RandomEventOnServer : SNetworkObject
 
     public void TriggerEvent(int index,SuperGunPlayer player)
     {
-        if (index <= 4)
-        {
-            index = 1;
-        }
-        else
-        {
-            index = 2;
-        }
+        index = 3;
 
-        switch(index)
+        switch (index)
         {
             case 1:
                 {
@@ -100,6 +93,11 @@ public class RandomEventOnServer : SNetworkObject
             case 2:
                 {
                     player.EquipWeapon("axe");
+                }
+                break;
+            case 3:
+                {
+                    player.EquipWeapon("fish");
                 }
                 break;
         }
