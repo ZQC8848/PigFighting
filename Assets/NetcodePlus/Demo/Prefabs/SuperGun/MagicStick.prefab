@@ -167,11 +167,16 @@ MonoBehaviour:
   weaponGameObject: {fileID: 5030293176370450137}
   magicBullet: {fileID: 3518617814632203656, guid: 584da970fdc44124a86eb0aa70d405c7,
     type: 3}
-  weaponCount: 0
+  magicSkill: {fileID: 3166183378062105067, guid: 23d69f166bc69534790ca4119cdcea09,
+    type: 3}
+  maxWeaponCount: 30
+  bulletDamage: 10
   firePoint: {fileID: 6706505429580904946}
   bulletPool: {fileID: 0}
   minX_distance: 15
   maxX_distance: 30
-  Y_range: 5
+  Y_range: 2
   moveTime: 1
   gunPlayer: {fileID: 0}
+  skillDamage: 70
+  searchRadius: 50

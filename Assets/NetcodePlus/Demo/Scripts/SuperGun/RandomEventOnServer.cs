@@ -53,6 +53,8 @@ public class RandomEventOnServer : SNetworkObject
         if (!isServer)
             return;
 
+        //superGunPlayer.eventData.RandomEventSeed = (int)DateTime.Now.Ticks;//set random seed
+
         gameTimer += Time.deltaTime;
         BoxTimer += Time.deltaTime;
 
@@ -62,8 +64,9 @@ public class RandomEventOnServer : SNetworkObject
 
             if (UnityEngine.Random.value < createBoxProbability)
             {
-                //UnityEngine.Random.InitState();
-                int index = UnityEngine.Random.Range(1, 1)*100 + UnityEngine.Random.Range(1, initBoxPoints.Count);//INDEX START WITH 1 BUT NOT 0 !!! 
+                UnityEngine.Random.InitState((int)System.DateTime.Now.Ticks);
+                int index = UnityEngine.Random.Range(0, 9)*100 + UnityEngine.Random.Range(1, initBoxPoints.Count);//INDEX START WITH 1 BUT NOT 0 !!! 
+                Debug.Log(index);
                 //9900-100 is eventNumber string and 99-1 is postion string
                 superGunPlayer.eventData.indexOfItemBox = index;
             }
@@ -79,12 +82,26 @@ public class RandomEventOnServer : SNetworkObject
 
     public void TriggerEvent(int index,SuperGunPlayer player)
     {
+        if (index <= 4)
+        {
+            index = 1;
+        }
+        else
+        {
+            index = 2;
+        }
+
         switch(index)
         {
             case 1:
                 {
                     player.EquipWeapon("magicstick");
                 }break;
+            case 2:
+                {
+                    player.EquipWeapon("axe");
+                }
+                break;
         }
     }
 }

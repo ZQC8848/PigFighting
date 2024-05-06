@@ -13,17 +13,25 @@ public class GunBullet : MonoBehaviour
     {
         Invoke("SelfDestory", 3);
     }
-    private void OnCollisionEnter2D(Collision2D collision)
+    private void OnTriggerEnter2D(Collider2D collision)
     {
         SuperGunPlayer superGunPlayer = collision.gameObject.GetComponent<SuperGunPlayer>();
         if (superGunPlayer != null && superGunPlayer.PlayerID != ownerPlayerId)
         {
             superGunPlayer.Damage(damageValue);
             superGunPlayer.SetForce(impactForce);
-        }    
-        
-        SelfDestory();
+            SelfDestory();
+        }
+        else if(collision.gameObject.GetComponent<AxeSkill_1>()!=null)
+        {
+            if (collision.gameObject.GetComponent<AxeSkill_1>().player.PlayerID == ownerPlayerId)
+            {
+                return;
+            }
+            SelfDestory();
+        }
     }
+
 
     public void SetOwnerPlayerId(int id)
     {

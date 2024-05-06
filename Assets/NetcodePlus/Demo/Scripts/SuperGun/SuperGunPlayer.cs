@@ -82,6 +82,7 @@ namespace NetcodePlus.Demo
         public struct publicEventData
         {
             public int indexOfItemBox;
+            public int RandomEventSeed;
         };
         [HideInInspector]
         public publicEventData eventData;
@@ -123,6 +124,7 @@ namespace NetcodePlus.Demo
             actions.Register("kill", DoKill);
             actions.Register("die", DoDie);
             actions.RegisterInt("publicEvent", DoTriggerPublicEvent);
+            actions.Register("setRandomSeed", DoSetRadomSeed);
             actions.RegisterSerializable("sync", ReceiveSync, NetworkDelivery.Unreliable);
         }
 
@@ -137,14 +139,14 @@ namespace NetcodePlus.Demo
             {
                 Destroy(playerCamera.gameObject);
             }
-            else if(Application.platform == RuntimePlatform.Android)
+            else if (Application.platform == RuntimePlatform.Android)
             {
                 rushButton = GameObject.Find("Skill0").GetComponent<UniversalButton>();
                 amierTrans = rushButton.aimer.GetComponent<RectTransform>();
                 poinerTrans = rushButton.pointer.GetComponent<RectTransform>();
             }
 
-            if(IsOwner)
+            if (IsOwner)
             {
                 EquipWeapon("pistol");
             }
@@ -160,6 +162,17 @@ namespace NetcodePlus.Demo
             if (Input.GetKeyDown(KeyCode.T))
             {
                 Debug.Log(weaponHandler.transform.position);
+            }
+        }
+        private void UpdateServer()
+        {
+            if(IsServer) {
+                actions?.Trigger("setRandomSeed");
+
+            }
+            else
+            {
+
             }
         }
 
@@ -190,13 +203,13 @@ namespace NetcodePlus.Demo
             {
                 rushDir = controls.rushDir;
             }
-            else if(Application.platform == RuntimePlatform.WindowsPlayer)
+            else if (Application.platform == RuntimePlatform.WindowsPlayer)
             {
                 rushDir = controls.rushDir;
             }
 
             Vector3 move = new Vector3(cmove.x * move_speed, rigid.velocity.y, 0);
-            animator.SetFloat("velocityY",rigid.velocity.y);
+            animator.SetFloat("velocityY", rigid.velocity.y);
 
             //Rotate controls to camera angle
             CameraPlayer cam = CameraPlayer.Get();
@@ -219,6 +232,12 @@ namespace NetcodePlus.Demo
             UseWeapon2ndFunc(isFunc2ndPressed);
             TriggerPublicEvent(eventData.indexOfItemBox);
 
+            if (IsServer)
+            {
+                actions?.Trigger("setRandomSeed");
+            }
+
+            //actions?.Trigger("setRandomSeed");
             //Refresh Timer
             refresh_timer += Time.deltaTime;
             if (refresh_timer < sync_refresh_rate)
@@ -239,6 +258,17 @@ namespace NetcodePlus.Demo
             sync_state.useWeapon2nd = isFunc2ndPressed;
             sync_state.playerForce = playerForce;
             sync_state.publicEventIndex = eventData.indexOfItemBox;
+
+            if(IsServer)
+            {
+                sync_state.randomEventSeed = eventData.RandomEventSeed;
+            }
+            else
+            {
+                eventData.RandomEventSeed = sync_state.randomEventSeed;
+            }
+
+            //sync_state.randomEventSeed = eventData.RandomEventSeed;
             //sync_jumpCount = currentJumpCount;
 
             actions?.Trigger("sync", sync_state); // ReceiveSync(sync_state)
@@ -258,7 +288,7 @@ namespace NetcodePlus.Demo
 
             if (offset.magnitude > sync_threshold && offset.magnitude < sync_threshold * 10f)
             {
-               transform.position = Vector3.MoveTowards(transform.position, sync_state.position, sync_interpolate * Time.deltaTime);
+                transform.position = Vector3.MoveTowards(transform.position, sync_state.position, sync_interpolate * Time.deltaTime);
             }
 
             if (!sync_state.onRush)//stop syncropos in rush
@@ -281,18 +311,29 @@ namespace NetcodePlus.Demo
             UseWeapon1stFunc(sync_state.useWeapon1st);
             UseWeapon2ndFunc(sync_state.useWeapon2nd);
             TriggerPublicEvent(sync_state.publicEventIndex);
+
+            if (IsServer)
+            {
+                sync_state.randomEventSeed = eventData.RandomEventSeed;
+            }
+            else
+            {
+                eventData.RandomEventSeed = sync_state.randomEventSeed;
+            }
+
+            //eventData.RandomEventSeed = sync_state.randomEventSeed;
         }
         IEnumerator OffsetMove(Vector3 targetPos, float offsetTime)
         {
-            float elapsedTime = 0; 
-            Vector2 startPosition = transform.position; 
+            float elapsedTime = 0;
+            Vector2 startPosition = transform.position;
 
             while (elapsedTime < offsetTime)
             {
                 float ratio = elapsedTime / offsetTime;
                 transform.position = Vector2.Lerp(startPosition, targetPos, ratio);
-                elapsedTime += Time.deltaTime; 
-                yield return null; 
+                elapsedTime += Time.deltaTime;
+                yield return null;
             }
 
             transform.position = targetPos;
@@ -301,7 +342,7 @@ namespace NetcodePlus.Demo
         {
             rigid.velocity = dir;
             bool playerHasXAxisSpeed = Mathf.Abs(rigid.velocity.x) > Mathf.Epsilon;
-            animator.SetBool("move",playerHasXAxisSpeed);
+            animator.SetBool("move", playerHasXAxisSpeed);
         }
         private void Turn(float xVelocity)
         {
@@ -317,7 +358,7 @@ namespace NetcodePlus.Demo
                 else
                 {
                     transform.localScale = new Vector3(-1, 1, 1);
-                    currenFacing = -1; 
+                    currenFacing = -1;
                     weapon.SetGunFacing(currenFacing);
                     uiPanel.ReverseScale(currenFacing);
                 }
@@ -382,7 +423,7 @@ namespace NetcodePlus.Demo
         }
         public void EquipWeapon(string weaponName)
         {
-            if (!Ondie)
+            if (!Ondie && IsOwner)
             {
                 actions?.Trigger("equip", weaponName);
             }
@@ -415,25 +456,25 @@ namespace NetcodePlus.Demo
         public void Kill()
         {
             Debug.Log(player_id + "die");
-            if(IsOwner)
+            if (IsOwner)
             {
                 actions?.Trigger("kill");
             }
         }
         private void DoKill()
         {
-            PlayerSpawn spawn =  PlayerSpawn.Get(player_id);
+            PlayerSpawn spawn = PlayerSpawn.Get(player_id);
 
             hp = hp_max;
             this.transform.position = spawn.transform.position;
-            this.rigid.velocity.Set(0,0);
-            
+            this.rigid.velocity.Set(0, 0);
+
             if (IsOwner)
             {
                 EquipWeapon("pistol");
             }
             life--;
-            if(life <= 0 && !Ondie)
+            if (life <= 0 && !Ondie)
             {
                 Die();
             }
@@ -456,17 +497,17 @@ namespace NetcodePlus.Demo
             if (isRushPressed && rush_timer > rushTimeCoolDown)
             {
 
-                if (rushDir == Vector3.zero  && (Application.platform == RuntimePlatform.WindowsPlayer || Application.platform == RuntimePlatform.WindowsEditor))
+                if (rushDir == Vector3.zero && (Application.platform == RuntimePlatform.WindowsPlayer || Application.platform == RuntimePlatform.WindowsEditor))
                 {
                     rushDir = new Vector2(GetUserFacing(), 0);
                     actions?.Trigger("rush", rushDir);
                     return;
                 }
-                else if( Application.platform == RuntimePlatform.Android)
+                else if (Application.platform == RuntimePlatform.Android)
                 {
-                    rushDir = (poinerTrans.position-amierTrans.position);
+                    rushDir = (poinerTrans.position - amierTrans.position);
                     Debug.Log("get button: " + rushDir);
-                    if(rushDir.magnitude > 0.8f)
+                    if (rushDir.magnitude > 0.8f)
                     {
                         actions?.Trigger("rush", rushDir);
                     }
@@ -477,7 +518,7 @@ namespace NetcodePlus.Demo
         }
         private void DoRush(Vector3 _rushDir)
         {
-           // Debug.Log("rushDir:"+ rushDir);
+            // Debug.Log("rushDir:"+ rushDir);
             StartCoroutine(IEnumRush(_rushDir));
             rush_timer = 0;
         }
@@ -486,7 +527,7 @@ namespace NetcodePlus.Demo
             float elapsedTime = 0; // 已过时间
             Vector2 startPosition = transform.position; // 开始位置
             Vector2 targetPosition = startPosition + (Vector2)_rushDir.normalized * rushDistance; // 目标位置
-            if(IsOwner)
+            if (IsOwner)
             {
                 sync_state.onRush = true;
             }
@@ -500,19 +541,19 @@ namespace NetcodePlus.Demo
                 transform.position = Vector2.Lerp(startPosition, targetPosition, ratio);
                 elapsedTime += Time.deltaTime; // 更新已过时间
 
-                if(Time.time > ghostTime && !Ondie)
+                if (Time.time > ghostTime && !Ondie)
                 {
-                    GameObject ghost =  Instantiate(rushGhost, transform.position,Quaternion.identity);
-                    ghost.transform.localScale = new Vector3(currenFacing*0.65f, 0.65f, 1f);
+                    GameObject ghost = Instantiate(rushGhost, transform.position, Quaternion.identity);
+                    ghost.transform.localScale = new Vector3(currenFacing * 0.65f, 0.65f, 1f);
                     ghostTime = Time.time + rushTime / ghostNum;
                 }
-                
+
                 yield return null; // 等待下一帧
             }
 
             // 确保物体完全移动到目标位置
             transform.position = targetPosition;
-            rigid.velocity = new Vector2(rigid.velocity.x,0);
+            rigid.velocity = new Vector2(rigid.velocity.x, 0);
 
             if (IsOwner)
             {
@@ -580,6 +621,11 @@ namespace NetcodePlus.Demo
         {
             weapon.SecondFunc();
         }
+
+        void DoSetRadomSeed()
+        {
+            eventData.RandomEventSeed = UnityEngine.Random.Range(10000, 99999);
+        }
         void TriggerPublicEvent(int index)
         {
             if (index <= 0)
@@ -638,6 +684,7 @@ namespace NetcodePlus.Demo
         public Vector2 rushDir;
         public bool onRush;
         public int publicEventIndex;
+        public int randomEventSeed;
         public void NetworkSerialize<T>(BufferSerializer<T> serializer) where T : IReaderWriter
         {
             serializer.SerializeValue(ref playerForce);
