@@ -41,7 +41,7 @@ public class MagicStick : Weapons
         Debug.Log("use Magic 1!!");
         weaponCount--;
         Random.InitState(weaponCount);
-
+        AudioSystem.Get().PlaySound("·¨ÕÈ");
 
         for(int i = 0;i<7;i++)
         {
@@ -71,6 +71,7 @@ public class MagicStick : Weapons
             MagicSkill _magicSkill = skill.GetComponent<MagicSkill>();
             _magicSkill.targetTransform = playerTransform;
             _magicSkill.damageValue = skillDamage;
+            AudioSystem.Get().PlaySound("À×»÷");
         }
 
         if (weaponCount <= 0)

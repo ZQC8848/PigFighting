@@ -18,8 +18,10 @@ public class GunBullet : MonoBehaviour
         SuperGunPlayer superGunPlayer = collision.gameObject.GetComponent<SuperGunPlayer>();
         if (superGunPlayer != null && superGunPlayer.PlayerID != ownerPlayerId)
         {
+            superGunPlayer.SetDamageSource(ownerPlayerId);
             superGunPlayer.Damage(damageValue);
-            superGunPlayer.SetForce(impactForce);
+            //superGunPlayer.SetForce(impactForce);
+            AudioSystem.Get().PlaySound("Уќжа");
             SelfDestory();
         }
         else if(collision.gameObject.GetComponent<AxeSkill_1>()!=null)

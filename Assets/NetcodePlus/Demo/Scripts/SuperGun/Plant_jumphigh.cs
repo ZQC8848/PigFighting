@@ -11,6 +11,7 @@ public class Plant_jumphigh : MonoBehaviour
         if (collision.gameObject.CompareTag("Player"))
         {
             collision.rigidbody.velocity = new Vector2(collision.rigidbody.velocity.x,hightExtent);
+            AudioSystem.Get().PlaySound("Ò»¶ÎÌø");
         }
     }
 }

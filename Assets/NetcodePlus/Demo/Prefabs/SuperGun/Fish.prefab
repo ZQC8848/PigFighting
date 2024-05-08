@@ -389,18 +389,18 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   weaponsName: fish
-  firstFuncCoolTime: 1
+  firstFuncCoolTime: 0.5
   secondFuncCoolTime: 1
   weaponGameObject: {fileID: 5111035503095891310}
   offset: 15
   fishBullet: {fileID: 8525588975751311909, guid: 4a869d90b5207fe4dad81cb9d3429e14,
     type: 3}
-  fishSkill: {fileID: 0}
+  fishSkill: {fileID: 2686629618745855487, guid: a073d97368afe0b45afe995c0f86fa8c,
+    type: 3}
   maxWeaponCount: 30
-  bulletDamage: 0
+  bulletDamage: 10
   firePoint: {fileID: 0}
   bulletPool: {fileID: 0}
-  moveTime: 0
   gunPlayer: {fileID: 0}
-  skillDamage: 0
-  searchRadius: 50
+  skillDamage: 10
+  skillMentainTime: 0.2

@@ -5,7 +5,7 @@ using UnityEngine;
 using DG.Tweening;
 public class MagicSkill : MonoBehaviour
 {
-    private float moveTime = 0.5f;
+    private float moveTime = 0.2f;
     public float damageValue;
     public int ownerPlayerId;
     public Transform targetTransform;

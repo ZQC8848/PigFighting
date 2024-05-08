@@ -25,7 +25,7 @@ public class RandomEventOnServer : SNetworkObject
     protected override void Start()
     {
         Invoke("LateInitData", 1);
-        
+
         isServer = TheNetwork.Get().IsServer;
         instance = this;
     }
@@ -65,7 +65,7 @@ public class RandomEventOnServer : SNetworkObject
             if (UnityEngine.Random.value < createBoxProbability)
             {
                 UnityEngine.Random.InitState((int)System.DateTime.Now.Ticks);
-                int index = UnityEngine.Random.Range(0, 9)*100 + UnityEngine.Random.Range(1, initBoxPoints.Count);//INDEX START WITH 1 BUT NOT 0 !!! 
+                int index = UnityEngine.Random.Range(0, 99) * 100 + UnityEngine.Random.Range(1, initBoxPoints.Count);//INDEX START WITH 1 BUT NOT 0 !!! 
                 Debug.Log(index);
                 //9900-100 is eventNumber string and 99-1 is postion string
                 superGunPlayer.eventData.indexOfItemBox = index;
@@ -75,21 +75,34 @@ public class RandomEventOnServer : SNetworkObject
 
     public void CreateItemBox(int index)
     {
-        GameObject itemBox =  Instantiate(ItemBox, initBoxPoints[index%100]);
+        GameObject itemBox = Instantiate(ItemBox, initBoxPoints[index % 100]);
         itemBox.transform.GetChild(0).GetComponent<ItemBox>().SetEventSerial(index / 100);
         superGunPlayer.eventData.indexOfItemBox = -1;
     }
 
-    public void TriggerEvent(int index,SuperGunPlayer player)
+    public void TriggerEvent(int index, SuperGunPlayer player)
     {
-        index = 3;
+        int gunIndex = 0;
+        if (index < 33)
+        {
+            gunIndex = 1;
+        }
+        else if (index >= 33 && index < 66)
+        {
+            gunIndex = 2;
+        }
+        else if (index >= 66)
+        {
+            gunIndex = 3;
+        }
 
-        switch (index)
+        switch (gunIndex)
         {
             case 1:
                 {
                     player.EquipWeapon("magicstick");
-                }break;
+                }
+                break;
             case 2:
                 {
                     player.EquipWeapon("axe");

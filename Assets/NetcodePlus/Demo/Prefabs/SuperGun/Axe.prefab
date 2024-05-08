@@ -231,7 +231,7 @@ MonoBehaviour:
   damageValue: 10
   heightMultiply: 0.5
   durationMultiply: 0.02
-  playerId: 0
+  skillExsitDuration: 5
   playerTransforms: []
   gunPlayer: {fileID: 0}
 --- !u!1 &7087870639933760839

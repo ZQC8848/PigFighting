@@ -76,6 +76,7 @@ public class Pistol : Weapons
         _bullet.SetImpactForce(redBulletImpactForce*GetBulletDir());
         _bullet.SetOwnerPlayerId(gunPlayer.PlayerID);
         AddRecoil();
+        AudioSystem.Get().PlaySound("ÅÝÅÝÐ¡");
     }
 
     void ShootGreenBullet()
@@ -91,6 +92,7 @@ public class Pistol : Weapons
         _bullet.SetImpactForce(greenBulletImpactForce*GetBulletDir());
         _bullet.SetOwnerPlayerId(gunPlayer.PlayerID);
         AddRecoil();
+        AudioSystem.Get().PlaySound("ÅÝÅÝ±¬·¢");
     }
 
     public override void SetGunFacing(int i)

@@ -1,3 +1,5 @@
+using DG.Tweening;
+using HighlightPlus;
 using Suriyun.MCS;
 using System;
 using System.Collections;
@@ -14,10 +16,12 @@ namespace NetcodePlus.Demo
     {
         [Header("PlayerState")]
         public float move_speed = 2f;
-        public float jump_force = 10f;
+        private float jump_force = 15f;
         public int maxJumpCount = 2;
         public float hp_max = 100;
         public float hp;
+        public int kills=0;
+        public int lasthurtSource = -1;
         public float life;
         public float life_max;
         private float forceRecession = 1.5f;
@@ -29,6 +33,8 @@ namespace NetcodePlus.Demo
         public float ghostNum = 10;
         private float ghostTime = 0;
         public bool Ondie = false;
+        public bool invincible = false;
+        private float invincibleTime = 3;
 
         //[Header("Synchonization Parameters")]
         private float sync_refresh_rate = 0.02f;
@@ -56,9 +62,17 @@ namespace NetcodePlus.Demo
         public RectTransform poinerTrans;
         public RectTransform amierTrans;
 
+        [Header("SpawnPoint")]
+        public Transform SpawnPoint;
+
         [Header("Animator")]
         public Animator animator;
 
+        private HighlightEffect highlight;
+        private SpriteRenderer bodyRender;
+        private SpriteRenderer handRender;
+
+        private ParticleSystem particle;
         private UIPanelAbovePlayer uiPanel;
 
         private int currentJumpCount;
@@ -99,9 +113,13 @@ namespace NetcodePlus.Demo
             eventData.indexOfItemBox = -1;
             //weaponHandler = transform.Find("WeaponHandler");
             weaponHandler = transform.Find("LiveBody").Find("WeaponHandler");
+            highlight = transform.Find("LiveBody").GetChild(0).GetComponent<HighlightEffect>();
             playerCamera = GetComponentInChildren<Camera>();
             animator = transform.Find("LiveBody").GetChild(0).GetComponent<Animator>();
             uiPanel = transform.Find("PlayerCanvas").Find("Panel").GetComponent<UIPanelAbovePlayer>();
+            bodyRender = transform.Find("LiveBody").GetChild(0).GetComponent<SpriteRenderer>();
+            handRender = transform.Find("LiveBody").GetChild(1).GetComponent<SpriteRenderer>();
+            particle = transform.Find("Particle").GetComponent<ParticleSystem>();
         }
         protected override void OnDestroy()
         {
@@ -125,6 +143,7 @@ namespace NetcodePlus.Demo
             actions.Register("die", DoDie);
             actions.RegisterInt("publicEvent", DoTriggerPublicEvent);
             actions.Register("setRandomSeed", DoSetRadomSeed);
+            actions.Register("addKills", DOAddKills);
             actions.RegisterSerializable("sync", ReceiveSync, NetworkDelivery.Unreliable);
         }
 
@@ -248,6 +267,7 @@ namespace NetcodePlus.Demo
             sync_state.timing = sync_state.timing + 1;
             sync_state.position = transform.position;
             sync_state.hp = hp;
+            sync_state.kills = kills;
             sync_state.life = life;
             sync_state.move = move;
             sync_state.jump = isJumpPressed;
@@ -307,6 +327,7 @@ namespace NetcodePlus.Demo
             playerForce = sync_state.playerForce;
             rushDir = sync_state.rushDir;
             life = sync_state.life;
+            kills = sync_state.kills;
             Rush(sync_state.rush);
             UseWeapon1stFunc(sync_state.useWeapon1st);
             UseWeapon2ndFunc(sync_state.useWeapon2nd);
@@ -343,6 +364,10 @@ namespace NetcodePlus.Demo
             rigid.velocity = dir;
             bool playerHasXAxisSpeed = Mathf.Abs(rigid.velocity.x) > Mathf.Epsilon;
             animator.SetBool("move", playerHasXAxisSpeed);
+            if (IsOnGroundCheck() && playerHasXAxisSpeed)
+            {
+                AudioSystem.Get().PlaySoundWaite("ÒÆ¶¯");
+            }
         }
         private void Turn(float xVelocity)
         {
@@ -389,6 +414,7 @@ namespace NetcodePlus.Demo
         {
             animator.SetBool("jump", true);
             rigid.velocity = new Vector3(rigid.velocity.x, jump_force);
+            AudioSystem.Get().PlaySound("Ò»¶ÎÌø");
         }
 
         private void Fall(bool isFallPressed)
@@ -448,10 +474,51 @@ namespace NetcodePlus.Demo
         }
         private void DoDamage(float damage)
         {
+            if (invincible)
+                return;
+
             hp -= damage;
+            bodyRender.color = Color.red;
+            handRender.color = Color.red;
+            
+            if (particle.isPlaying)
+            {
+                particle.Stop();
+                particle.Play();
+            }
+            else
+            {
+                particle.Play();
+            }
+            Invoke("ResetBodyColor", 0.2f);
             Debug.Log(PlayerID + "hp:" + hp);
             if (hp <= 0)
+            {
                 Kill();
+                if(lasthurtSource != -1)
+                {
+                    SuperGunPlayer gunPlayer = SuperGunPlayer.Get(lasthurtSource);
+                    gunPlayer.AddKills();
+                }
+            }
+        }
+        void ResetBodyColor()
+        {
+            bodyRender.color = Color.white;
+            handRender.color = Color.white;
+        }
+        public void SetDamageSource(int enemyId)
+        {
+            lasthurtSource = enemyId;
+        }
+        public void AddKills()
+        {
+            if (IsServer)
+                actions?.Trigger("addKills");
+        }
+        private void DOAddKills()
+        {
+            kills++;
         }
         public void Kill()
         {
@@ -463,20 +530,26 @@ namespace NetcodePlus.Demo
         }
         private void DoKill()
         {
-            PlayerSpawn spawn = PlayerSpawn.Get(player_id);
-
-            hp = hp_max;
-            this.transform.position = spawn.transform.position;
-            this.rigid.velocity.Set(0, 0);
-
             if (IsOwner)
             {
                 EquipWeapon("pistol");
             }
+            AudioSystem.Get().PlaySound("ËÀÍö");
+            transform.Find("LiveBody").gameObject.SetActive(false);
+            SpawnPoint = GameObject.Find("SpawnPoint").transform;
+            hp = hp_max;
+            this.transform.position = SpawnPoint.position;
+            this.rigid.velocity.Set(0, 0);
+            invincible = true;
+            highlight.highlighted = true;
+            Invoke("ShowLiveBody", 0.2f);
+            Invoke("ChangInvincibleState", invincibleTime);
+
             life--;
             if (life <= 0 && !Ondie)
             {
                 Die();
+                life = 0;
             }
         }
         public void Die()
@@ -491,6 +564,16 @@ namespace NetcodePlus.Demo
             this.gameObject.layer = 9;
             jump_force *= 1.5f;
             weapon.Discard();
+        }
+        private void ShowLiveBody()
+        {
+            lasthurtSource = -1;
+            transform.Find("LiveBody").gameObject.SetActive(true);
+        }
+        public void ChangInvincibleState()
+        {
+            invincible = false;
+            highlight.highlighted = false;
         }
         private void Rush(bool isRushPressed)
         {
@@ -521,6 +604,7 @@ namespace NetcodePlus.Demo
             // Debug.Log("rushDir:"+ rushDir);
             StartCoroutine(IEnumRush(_rushDir));
             rush_timer = 0;
+            AudioSystem.Get().PlaySound("³å´Ì");
         }
         IEnumerator IEnumRush(Vector3 _rushDir)
         {
@@ -680,6 +764,7 @@ namespace NetcodePlus.Demo
         public bool useWeapon2nd;
         public float hp;
         public float life;
+        public int kills;
         public Vector3 playerForce;
         public Vector2 rushDir;
         public bool onRush;
@@ -704,6 +789,7 @@ namespace NetcodePlus.Demo
             serializer.SerializeValue(ref rushDir);
             serializer.SerializeValue(ref onRush);
             serializer.SerializeValue(ref publicEventIndex);
+            serializer.SerializeValue(ref kills);
         }
     }
 }

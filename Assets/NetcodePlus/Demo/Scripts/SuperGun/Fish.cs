@@ -21,13 +21,12 @@ public class Fish : Weapons
     public Transform firePoint;
     public Transform bulletPool;
 
-    public float moveTime;
     public SuperGunPlayer gunPlayer;
 
 
     [Header("Inite Skill Parameter")]
     public float skillDamage;
-    public float searchRadius = 50f;
+    public float skillMentainTime;
     private void Start()
     {
         firePoint = transform.Find("FirePoint");
@@ -45,8 +44,10 @@ public class Fish : Weapons
             GameObject bullet = Instantiate(fishBullet, firePoint.position, firePoint.rotation*Quaternion.Euler(0,0, -90*gunFacing + offset * (i-1) ), bulletPool);
             FishBullet _fishBullet = bullet.GetComponent<FishBullet>();
             _fishBullet.Speed = 100;
+            _fishBullet.damageValue = bulletDamage;
+            _fishBullet.ownerPlayerId = gunPlayer.PlayerID;
         }
-        
+        AudioSystem.Get().PlaySound("—ˆÕ˚–«ø’");
         if (weaponCount <= 0)
         {
             gunPlayer.EquipWeapon("pistol");
@@ -54,15 +55,23 @@ public class Fish : Weapons
     }
     public override void SecondFunc()
     {
+        
+        GameObject skill = Instantiate(fishSkill, firePoint.position + new Vector3(gunFacing * fishSkill.transform.localScale.x / 2,0,0), firePoint.rotation, bulletPool);
+        FishSkill _fishSkill = skill.GetComponent<FishSkill>();
+        _fishSkill.skillMentainTime = skillMentainTime;
+        _fishSkill.skillDamage = skillDamage;
+        _fishSkill.ownerPlayerId=gunPlayer.PlayerID;
+        AudioSystem.Get().PlaySound("æﬁ¥Û”„Õ∑");
+        AfterSkill();
+    }
+    void AfterSkill()
+    {
         weaponCount -= maxWeaponCount;
-
-
         if (weaponCount <= 0)
         {
             gunPlayer.EquipWeapon("pistol");
         }
     }
-
     List<Transform> FindPlayersAround()
     {
         List<Transform> foundTransforms = new List<Transform>();

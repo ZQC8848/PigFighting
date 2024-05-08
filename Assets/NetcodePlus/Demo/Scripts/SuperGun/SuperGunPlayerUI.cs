@@ -53,7 +53,7 @@ namespace NetcodePlus.Demo
                 //Debug.Log(gunPlayer.name);
                 hp_bar.currentHealth = gunPlayer.hp;
                 hp_bar.maxHealth = gunPlayer.hp_max;
-                lastLife.text = gunPlayer.life.ToString();
+                lastLife.text = gunPlayer.life.ToString() + " / " + gunPlayer.kills.ToString();
                 //Debug.Log(hp_bar.currentHealth + " / " + hp_bar.maxHealth);
             }
             else

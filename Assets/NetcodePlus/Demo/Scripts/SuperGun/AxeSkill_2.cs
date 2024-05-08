@@ -34,6 +34,7 @@ public class AxeSkill_2 : MonoBehaviour
     }
     void SelfDestory()
     {
+        AudioSystem.Get().StopSound("¸«Í·Ðý×ª");
         Destroy(gameObject);
     }
 }

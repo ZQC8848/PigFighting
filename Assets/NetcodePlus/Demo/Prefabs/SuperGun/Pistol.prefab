@@ -162,8 +162,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   weaponsName: pistol
-  firstFuncCoolTime: 0.1
-  secondFuncCoolTime: 10
+  firstFuncCoolTime: 0.3
+  secondFuncCoolTime: 5
   weaponGameObject: {fileID: 5030293176370450137}
   redBullet: {fileID: 1388074884096637546, guid: e8b5ef275952ace4fad3565010320999,
     type: 3}
@@ -180,6 +180,6 @@ MonoBehaviour:
   greenBulletImpactForce: 60
   recoil: 20
   playerId: 0
-  skillContinueTime: 10
+  skillContinueTime: 3
   onSkill: 0
   gunPlayer: {fileID: 0}
