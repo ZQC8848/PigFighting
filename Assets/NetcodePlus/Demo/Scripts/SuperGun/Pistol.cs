@@ -72,6 +72,7 @@ public class Pistol : Weapons
         rb.velocity = GetBulletDir() * redBulletSpeed + new Vector3(gunPlayer.rigid.velocity.x,0,0);
 
         GunBullet _bullet = bullet.GetComponent<GunBullet>();
+        _bullet.gameObject.transform.localScale = new Vector3(gunFacing * _bullet.gameObject.transform.localScale.x, _bullet.gameObject.transform.localScale.y , 1);
         _bullet.SetDamage(redBulletDamage);
         _bullet.SetImpactForce(redBulletImpactForce*GetBulletDir());
         _bullet.SetOwnerPlayerId(gunPlayer.PlayerID);
@@ -87,7 +88,7 @@ public class Pistol : Weapons
         rb.velocity = GetBulletDir() * greenBulletSpeed + new Vector3(gunPlayer.rigid.velocity.x, 0, 0);
 
         GunBullet _bullet = bullet.GetComponent<GunBullet>();
-        _bullet.gameObject.transform.localScale *= 5f;
+        _bullet.gameObject.transform.localScale = new Vector3(gunFacing * _bullet.gameObject.transform.localScale.x * 5, _bullet.gameObject.transform.localScale.y * 5, 1);
         _bullet.SetDamage(greenBulletDamage);
         _bullet.SetImpactForce(greenBulletImpactForce*GetBulletDir());
         _bullet.SetOwnerPlayerId(gunPlayer.PlayerID);

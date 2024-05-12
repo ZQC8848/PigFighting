@@ -95,7 +95,7 @@ public class RandomEventOnServer : SNetworkObject
         //{
         //    gunIndex = 3;
         //}
-        gunIndex = 1;
+        gunIndex = 3;
         switch (gunIndex)
         {
             case 1:

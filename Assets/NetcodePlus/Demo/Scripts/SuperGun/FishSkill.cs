@@ -11,18 +11,9 @@ public class FishSkill : MonoBehaviour
     public int ownerPlayerId;
     void Start()
     {
-        ShowLaser();
-        Invoke("CloseLaser", skillMentainTime);
+        
     }
-    void ShowLaser()
-    {
-        this.transform.DOScaleY(10f, openAndCloseTime);
-    }
-    void CloseLaser()
-    {
-        this.transform.DOScaleY(0.01f, openAndCloseTime);
-        Invoke("SelfDestory", openAndCloseTime);
-    }
+
     private void OnTriggerStay2D(Collider2D collision)
     {
         SuperGunPlayer superGunPlayer = collision.gameObject.GetComponent<SuperGunPlayer>();
@@ -32,7 +23,7 @@ public class FishSkill : MonoBehaviour
             superGunPlayer.Damage(skillDamage);
         }
     }
-    void SelfDestory()
+    public void SelfDestory()
     {
         Destroy(this.gameObject);
     }
