@@ -16,7 +16,7 @@ namespace NetcodePlus.Demo
     {
         [Header("PlayerState")]
         public float move_speed = 2f;
-        private float jump_force = 15f;
+        private float jump_force = 15*1.5f;
         public int maxJumpCount = 2;
         public float hp_max = 100;
         public float hp;

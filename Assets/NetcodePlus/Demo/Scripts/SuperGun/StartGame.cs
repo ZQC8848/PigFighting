@@ -10,6 +10,7 @@ public class StartGame : MonoBehaviour
 {
     Transform thisTransform;
     public bool GameStart;
+    public GameObject death;
     void Start()
     {
         thisTransform = this.transform;
@@ -48,10 +49,10 @@ public class StartGame : MonoBehaviour
                 if (_superGunPlayer != null && aplayer.IsAssigned())
                 {
                     _superGunPlayer.ChangInvincibleState();
-                    _superGunPlayer.Damage(120);
                     _superGunPlayer.life++;
                 }
             }
         }
+        death.SetActive(true);
     }
 }

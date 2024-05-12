@@ -5,12 +5,13 @@ using UnityEngine;
 using DG.Tweening;
 public class MagicSkill : MonoBehaviour
 {
-    private float moveTime = 0.2f;
+    private float moveTime = 0.3f;
     public float damageValue;
     public int ownerPlayerId;
     public Transform targetTransform;
     void Start()
     {
+        this.transform.position += new Vector3(0, 15f, 0);
         Invoke("SelfDestory", moveTime+0.2f);
         this.transform.DOMove(targetTransform.position+ new Vector3(0,30f,0),moveTime).From(true);
     }
@@ -22,7 +23,7 @@ public class MagicSkill : MonoBehaviour
         if (superGunPlayer != null )
         {
             superGunPlayer.Damage(damageValue);
-            SelfDestory();
+            //SelfDestory();
         }
     }
     public void SetOwnerPlayerId(int id)
