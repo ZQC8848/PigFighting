@@ -5375,7 +5375,7 @@ Camera:
   m_Enabled: 1
   serializedVersion: 2
   m_ClearFlags: 2
-  m_BackGroundColor: {r: 0.19215687, g: 0.3019608, b: 0.4745098, a: 0}
+  m_BackGroundColor: {r: 0, g: 0, b: 0, a: 0}
   m_projectionMatrixMode: 1
   m_GateFitMode: 2
   m_FOVAxisMode: 0
@@ -5807,8 +5807,8 @@ MonoBehaviour:
   overlayTextureScale: 1
   overlayTextureScrolling: {x: 0, y: 0}
   overlayVisibility: 0
-  outline: 0
-  outlineColor: {r: 1, g: 0.8179555, b: 0, a: 1}
+  outline: 1
+  outlineColor: {r: 1, g: 0.78431374, b: 0, a: 1}
   outlineColorStyle: 0
   outlineGradient:
     serializedVersion: 2
@@ -5841,7 +5841,7 @@ MonoBehaviour:
     m_NumColorKeys: 2
     m_NumAlphaKeys: 2
   outlineGradientInLocalSpace: 0
-  outlineWidth: 0.45
+  outlineWidth: 1
   outlineBlurPasses: 2
   outlineQuality: 2
   outlineEdgeMode: 0
@@ -5854,7 +5854,7 @@ MonoBehaviour:
   outlineBlitDebug: 0
   outlineIndependent: 0
   outlineContourStyle: 0
-  glow: 2.34
+  glow: 0
   glowWidth: 0.4
   glowQuality: 2
   glowBlurMethod: 0

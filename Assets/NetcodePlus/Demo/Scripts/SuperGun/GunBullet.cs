@@ -11,7 +11,7 @@ public class GunBullet : MonoBehaviour
         
     private void Start()
     {
-        Invoke("SelfDestory", 3);
+        Invoke("SelfDestory", 2);
     }
     private void OnTriggerEnter2D(Collider2D collision)
     {

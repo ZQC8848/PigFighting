@@ -513,6 +513,11 @@ namespace NetcodePlus.Demo
         }
         public void AddKills()
         {
+            if(IsOwner)
+            {
+                AudioSystem.Get().PlaySound("ª˜…±µ–»À");
+            }
+
             if (IsServer)
                 actions?.Trigger("addKills");
         }
@@ -533,8 +538,9 @@ namespace NetcodePlus.Demo
             if (IsOwner)
             {
                 EquipWeapon("pistol");
+                AudioSystem.Get().PlaySound("À¿Õˆ");
             }
-            AudioSystem.Get().PlaySound("À¿Õˆ");
+            
             transform.Find("LiveBody").gameObject.SetActive(false);
             SpawnPoint = GameObject.Find("SpawnPoint").transform;
             hp = hp_max;

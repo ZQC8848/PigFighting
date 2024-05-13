@@ -20,7 +20,7 @@ public class MagicSkill : MonoBehaviour
     private void OnTriggerEnter2D(Collider2D collision)
     {
         SuperGunPlayer superGunPlayer = collision.gameObject.GetComponent<SuperGunPlayer>();
-        if (superGunPlayer != null )
+        if (superGunPlayer != null && superGunPlayer.PlayerID!=ownerPlayerId)
         {
             superGunPlayer.Damage(damageValue);
             //SelfDestory();

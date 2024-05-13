@@ -224,10 +224,10 @@ MonoBehaviour:
     type: 3}
   fishSkill: {fileID: 2686629618745855487, guid: a073d97368afe0b45afe995c0f86fa8c,
     type: 3}
-  maxWeaponCount: 30
-  bulletDamage: 10
+  maxWeaponCount: 25
+  bulletDamage: 15
   firePoint: {fileID: 0}
   bulletPool: {fileID: 0}
   gunPlayer: {fileID: 0}
-  skillDamage: 10
+  skillDamage: 3
   skillMentainTime: 0.2

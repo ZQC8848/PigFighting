@@ -46,24 +46,14 @@ public class Pistol : Weapons
     }
     public override void FisrtFunc()
     {
-        if(onSkill)
-        {
-            ShootGreenBullet();
-            return;
-        }
         ShootRedBullet();
     }
 
     public override void SecondFunc()
     {
-        onSkill = true;
-        Invoke("ShutDownSkillTime", skillContinueTime);
+        ShootGreenBullet();
     }
     
-    void ShutDownSkillTime()
-    {
-        onSkill = false;
-    }
 
     void ShootRedBullet()
     {

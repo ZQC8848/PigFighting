@@ -131,7 +131,7 @@ MonoBehaviour:
   child: {fileID: 4998249836421457648}
   playerTransform: {fileID: 0}
   radius: 10
-  speed: 3
+  speed: 6
   angle: 0
 --- !u!114 &663219116933226291
 MonoBehaviour:
@@ -178,7 +178,7 @@ MonoBehaviour:
   subMeshMask: -1
   overlay: 0.51
   overlayMode: 0
-  overlayColor: {r: 1, g: 0.92156863, b: 0.015686275, a: 1}
+  overlayColor: {r: 1, g: 0.9520918, b: 0.61320746, a: 1}
   overlayAnimationSpeed: 1
   overlayMinIntensity: 0.5
   overlayBlending: 1
@@ -187,8 +187,8 @@ MonoBehaviour:
   overlayTextureScale: 1
   overlayTextureScrolling: {x: 0, y: 0}
   overlayVisibility: 0
-  outline: 0.209
-  outlineColor: {r: 1, g: 0.74802285, b: 0, a: 1}
+  outline: 0
+  outlineColor: {r: 1, g: 1, b: 1, a: 1}
   outlineColorStyle: 0
   outlineGradient:
     serializedVersion: 2
@@ -239,7 +239,7 @@ MonoBehaviour:
   glowQuality: 2
   glowBlurMethod: 0
   glowDownsampling: 3
-  glowHQColor: {r: 1, g: 0.44555527, b: 0, a: 1}
+  glowHQColor: {r: 1, g: 0.9365291, b: 0.49999988, a: 1}
   glowDithering: 1
   glowDitheringStyle: 0
   glowMagicNumber1: 0.75
@@ -390,7 +390,7 @@ SpriteRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 2
   m_Sprite: {fileID: 21300000, guid: 497116fbb4caf80438829203fd6e6518, type: 3}
-  m_Color: {r: 1, g: 0.85299873, b: 0, a: 1}
+  m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0

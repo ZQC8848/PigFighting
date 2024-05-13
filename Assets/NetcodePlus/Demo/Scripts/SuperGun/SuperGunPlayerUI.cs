@@ -12,12 +12,16 @@ namespace NetcodePlus.Demo
         public Text username;
         public SuperGunHPBar hp_bar;
         public Text lastLife;
-
+        public Text kills;
+        public PlayerIconChoose choose;
         void Start()
         {
-            hp_bar.gameObject.SetActive(false);
-            username.gameObject.SetActive(false);
-            lastLife.gameObject.SetActive(false);
+            foreach(Transform child in transform)
+            {
+                child.gameObject.SetActive(false);
+            }
+            //username.gameObject.SetActive(false);
+            //lastLife.gameObject.SetActive(false);
         }
 
         void Update()
@@ -36,16 +40,23 @@ namespace NetcodePlus.Demo
             username.text = player.username;
 
             bool visible = player.connected;
-            if (hp_bar.gameObject.activeSelf != visible)
-                hp_bar.gameObject.SetActive(visible);
-            if (username.gameObject.activeSelf != visible)
-                username.gameObject.SetActive(visible);
-            if(lastLife.gameObject.activeSelf != visible)
-                lastLife.gameObject.SetActive(visible);
+
+            foreach(Transform child in transform)
+            {
+                if(child.gameObject.activeSelf != visible && child.name!= "Hpbar")
+                    child.gameObject.SetActive(visible);
+            }
+            //if (username.gameObject.activeSelf != visible)
+            //    username.gameObject.SetActive(visible);
+            //if(lastLife.gameObject.activeSelf != visible)
+            //    lastLife.gameObject.SetActive(visible);
 
             PlayerChoiceData choice = PlayerChoiceData.Get(GameMode.SuperGun, player.character);
             if (choice != null)
+            {
                 hp_bar.color = choice.color;
+                choose.ChooseIcon(choice.id);
+            }
 
             SuperGunPlayer gunPlayer = SuperGunPlayer.Get(player_id);
             if (gunPlayer != null)
@@ -53,7 +64,8 @@ namespace NetcodePlus.Demo
                 //Debug.Log(gunPlayer.name);
                 hp_bar.currentHealth = gunPlayer.hp;
                 hp_bar.maxHealth = gunPlayer.hp_max;
-                lastLife.text = gunPlayer.life.ToString() + " / " + gunPlayer.kills.ToString();
+                lastLife.text = gunPlayer.life.ToString();
+                kills.text = gunPlayer.kills.ToString();
                 //Debug.Log(hp_bar.currentHealth + " / " + hp_bar.maxHealth);
             }
             else

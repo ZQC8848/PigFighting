@@ -114,25 +114,20 @@ public class Axe : Weapons
     public override void SecondFunc()
     {
         weaponCount-=maxWeaponCount;
-        AudioSystem.Get().PlaySound("斧头旋转", true);
+        AudioSystem.Get().PlaySound("斧头旋转");
         for (int i = 0; i < 12; i++)
         {
             GameObject bullet = Instantiate(axeSkill, firePoint.position, firePoint.rotation, bulletPool);
             AxeSkill_2 _axeSkill = bullet.GetComponent<AxeSkill_2>();
-            _axeSkill.child.damageValue = damageValue;
+            _axeSkill.child.damageValue = damageValue/5*3;
             _axeSkill.child.player = gunPlayer;
             _axeSkill.playerTransform = gunPlayer.transform;
             _axeSkill.existDuration = skillExsitDuration;
             _axeSkill.angle += MathF.PI/6*i;
         }
-        Invoke("StopSound", skillExsitDuration);
         if( weaponCount <=0 ) {
             gunPlayer.EquipWeapon("pistol");
         }
-    }
-    void StopSound()
-    {
-        AudioSystem.Get().StopSound("斧头旋转");
     }
     public override void SetGunFacing(int i)
     {

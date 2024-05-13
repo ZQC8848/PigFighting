@@ -83,19 +83,19 @@ public class RandomEventOnServer : SNetworkObject
     public void TriggerEvent(int index, SuperGunPlayer player)
     {
         int gunIndex = 0;
-        //if (index < 33)
-        //{
-        //    gunIndex = 1;
-        //}
-        //else if (index >= 33 && index < 66)
-        //{
-        //    gunIndex = 2;
-        //}
-        //else if (index >= 66)
-        //{
-        //    gunIndex = 3;
-        //}
-        gunIndex = 3;
+        if (index < 33)
+        {
+            gunIndex = 1;
+        }
+        else if (index >= 33 && index < 66)
+        {
+            gunIndex = 2;
+        }
+        else if (index >= 66)
+        {
+            gunIndex = 3;
+        }
+
         switch (gunIndex)
         {
             case 1:

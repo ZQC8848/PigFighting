@@ -13,6 +13,6 @@ MonoBehaviour:
   m_Name: GunPlayerGrey
   m_EditorClassIdentifier: 
   mode: 40
-  id: red
+  id: grey
   prefab: {fileID: 3494675090739297473, guid: 41ba51254836a35499ccb904e6756805, type: 3}
   color: {r: 0.48235297, g: 0.48627454, b: 0.48235297, a: 1}

@@ -107,12 +107,12 @@ namespace NetcodePlus.Demo
                 press_2ndfunc = true;
             if (Input.GetKey(func1st_key)||adAttack)
                 press_1stfunc = true;
-            if (Input.GetKeyDown(jump_key)||adJump)
+            if (Input.GetKeyDown(jump_key)||adJump|| Input.GetKeyDown(KeyCode.Space))
             {
                 press_jump = true;
                 //adJump = false;
             }
-            if (Input.GetKeyDown(fall_key)||adFall)   
+            if (Input.GetKeyDown(fall_key)||adFall|| Input.GetKeyDown(KeyCode.LeftControl))   
             {
                 press_fall = true;
                 //adFall = false;
@@ -133,11 +133,11 @@ namespace NetcodePlus.Demo
                     {
                         rushDir += Vector2.left;
                     }
-                    if (Input.GetKey(KeyCode.W))
+                    if (Input.GetKey(KeyCode.W) || Input.GetKeyDown(KeyCode.Space))
                     {
                         rushDir += Vector2.up;
                     }
-                    if (Input.GetKey(KeyCode.S))
+                    if (Input.GetKey(KeyCode.S) || Input.GetKeyDown(KeyCode.LeftControl))
                     {
                         rushDir += Vector2.down;
                     }
