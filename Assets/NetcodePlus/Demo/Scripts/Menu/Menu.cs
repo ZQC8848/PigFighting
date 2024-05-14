@@ -6,6 +6,7 @@ using UnityEngine.Events;
 using UnityEngine.UI;
 using NetcodePlus;
 using UnityEngine.SceneManagement;
+using System;
 
 namespace NetcodePlus.Demo
 {
@@ -99,12 +100,15 @@ namespace NetcodePlus.Demo
             Debug.Log("On click create button");
             GameMode mode = (GameMode) create_mode.GetSelectedValue();
             Debug.Log("Get gamemode = " + mode);
-            CreateGame(create_user.text, mode, create_color.GetSelectedValue());
+            string paddedString = DateTime.UtcNow.Millisecond.ToString().PadLeft(3, '0');
+            CreateGame(paddedString + create_user.text, mode, create_color.GetSelectedValue());
+            Debug.Log(DateTime.UtcNow.Millisecond);
         }
 
         public void OnClickJoin()
         {
-            JoinGame(join_user.text, join_host.text, join_color.GetSelectedValue());
+            string paddedString = DateTime.UtcNow.Millisecond.ToString().PadLeft(3, '0');
+            JoinGame(paddedString + join_user.text, join_host.text, join_color.GetSelectedValue());
         }
 
         public void CreateGame(string user, GameMode mode, string character)

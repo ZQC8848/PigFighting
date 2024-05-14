@@ -6,7 +6,7 @@ using UnityEngine;
 public class MagicBullet : MonoBehaviour
 {
     // Start is called before the first frame update
-    private float remainTime = 5f;
+    private float remainTime = 10f;
     public float damageValue;
     public int ownerPlayerId;
     void Start()
@@ -19,6 +19,7 @@ public class MagicBullet : MonoBehaviour
         SuperGunPlayer superGunPlayer = collision.gameObject.GetComponent<SuperGunPlayer>();
         if (superGunPlayer != null && superGunPlayer.PlayerID != ownerPlayerId)
         {
+            superGunPlayer.SetDamageSource(ownerPlayerId);
             superGunPlayer.Damage(damageValue);
             SelfDestory();
         }

@@ -9,7 +9,7 @@ public class Plant_Move : MonoBehaviour
     public float moveSpeed;
     public Vector2 moveDirection;
     public float moveChangeTime;
-    public float moveTime;
+    private float moveTime;
     private bool moveToRight;
     private bool moveToLeft;
     void Start()
@@ -51,10 +51,10 @@ public class Plant_Move : MonoBehaviour
 
     private void MoveRightOrUp()
     {
-        this.transform.Translate(moveDirection*moveSpeed*moveTime);
+        this.transform.Translate(moveDirection*moveSpeed*moveTime*Time.deltaTime);
     }
     private void MoveLeftOrDown()
     {
-        this.transform.Translate(-moveDirection * moveSpeed * moveTime);
+        this.transform.Translate(-moveDirection * moveSpeed * moveTime*Time.deltaTime);
     }
 }

@@ -11,6 +11,8 @@ public class StartGame : MonoBehaviour
     Transform thisTransform;
     public bool GameStart;
     public GameObject death;
+    public DoMoveCurtain left;
+    public DoMoveCurtain right;
     void Start()
     {
         thisTransform = this.transform;
@@ -32,6 +34,7 @@ public class StartGame : MonoBehaviour
     void StartGameFunc()
     {
         AudioSystem.Get().PlaySound("战斗背景音", true);
+        AudioSystem.Get().StopSound("准备房间");
 
         GameData gdata = GameData.Get();
         if (gdata == null)
@@ -54,5 +57,7 @@ public class StartGame : MonoBehaviour
             }
         }
         death.SetActive(true);
+        right.DoMoveObj();
+        left.DoMoveObj();
     }
 }

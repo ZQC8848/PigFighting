@@ -37,7 +37,7 @@ namespace NetcodePlus.Demo
             if (player == null)
                 return;
 
-            username.text = player.username;
+            username.text = player.username.Substring(3);
 
             bool visible = player.connected;
 

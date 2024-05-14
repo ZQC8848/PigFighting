@@ -469,6 +469,7 @@ namespace NetcodePlus.Demo
         }
         public void Damage(float damage)
         {
+            AudioSystem.Get().PlaySound("Уќжа");
             if (IsServer)
                 actions?.Trigger("damage", damage);
         }
@@ -548,7 +549,10 @@ namespace NetcodePlus.Demo
             this.rigid.velocity.Set(0, 0);
             invincible = true;
             highlight.highlighted = true;
-            Invoke("ShowLiveBody", 0.2f);
+            if (!Ondie)
+            {
+                Invoke("ShowLiveBody", 0.2f);
+            }
             Invoke("ChangInvincibleState", invincibleTime);
 
             life--;
@@ -568,13 +572,16 @@ namespace NetcodePlus.Demo
             transform.Find("LiveBody").gameObject.SetActive(false);
             transform.Find("DeathBody").gameObject.SetActive(true);
             this.gameObject.layer = 9;
-            jump_force *= 1.5f;
             weapon.Discard();
         }
         private void ShowLiveBody()
         {
             lasthurtSource = -1;
             transform.Find("LiveBody").gameObject.SetActive(true);
+            if (life <= 0)
+            {
+                Die();
+            }
         }
         public void ChangInvincibleState()
         {

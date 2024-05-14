@@ -27,6 +27,7 @@ public class AxeBullet : MonoBehaviour
         SuperGunPlayer superGunPlayer = collision.gameObject.GetComponent<SuperGunPlayer>();
         if (superGunPlayer != null && superGunPlayer.PlayerID != ownerPlayerId)
         {
+            superGunPlayer.SetDamageSource(ownerPlayerId);
             superGunPlayer.Damage(damageValue);
             SelfDestory();
         }

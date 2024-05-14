@@ -68,7 +68,7 @@ namespace NetcodePlus.Demo
                     if (superGunPlayer != null && superGunPlayer.life <= 0)
                     {
                         ended = true;
-                        GameOverPanel.Get().Show("You lost!", "Your tank was destroyed");
+                        GameOverPanel.Get().Show("你输了", "准备上桌");
                     }
 
                     int count_all = 0;
@@ -89,7 +89,7 @@ namespace NetcodePlus.Demo
                     if (superGunPlayer != null && superGunPlayer.life > 0 && count_all >= 2 && count_alive == 1)
                     {
                         ended = true;
-                        GameOverPanel.Get().Show("You won!", "You destroyed everyone else");
+                        GameOverPanel.Get().Show("你赢了", "准备吃席");
                     }
                 }
             }

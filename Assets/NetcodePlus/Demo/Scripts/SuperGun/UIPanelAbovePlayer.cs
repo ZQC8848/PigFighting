@@ -19,7 +19,7 @@ public class UIPanelAbovePlayer : MonoBehaviour
     void SetName()
     {
         GameData gdata = GameData.Get();
-        playerName.text = gdata.GetPlayer(superGunPlayer.PlayerID).username;
+        playerName.text = gdata.GetPlayer(superGunPlayer.PlayerID).username.Substring(3);
     }
     void SetColor()
     {

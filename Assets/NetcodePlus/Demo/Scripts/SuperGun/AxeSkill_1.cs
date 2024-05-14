@@ -25,6 +25,7 @@ public class AxeSkill_1 : MonoBehaviour
             SuperGunPlayer superGunPlayer = collision.gameObject.GetComponent<SuperGunPlayer>();
             if (superGunPlayer.PlayerID != player.PlayerID)
             {
+                superGunPlayer.SetDamageSource(player.PlayerID);
                 superGunPlayer.Damage(damageValue);
                 SelfDestory();
             }

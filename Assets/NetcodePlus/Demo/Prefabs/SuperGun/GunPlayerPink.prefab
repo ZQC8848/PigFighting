@@ -4955,8 +4955,9 @@ MonoBehaviour:
       m_Calls: []
   m_text: PlayerName
   m_isRightToLeft: 0
-  m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
-  m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
+  m_fontAsset: {fileID: 11400000, guid: f7e5e7c4f9ae1c7419fdbb20192a06d3, type: 2}
+  m_sharedMaterial: {fileID: -3682451256392693080, guid: f7e5e7c4f9ae1c7419fdbb20192a06d3,
+    type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []
@@ -5469,7 +5470,7 @@ MonoBehaviour:
   kills: 0
   lasthurtSource: -1
   life: 0
-  life_max: 100
+  life_max: 20
   rushDir: {x: 0, y: 0, z: 0}
   rushGhost: {fileID: 5316471772591757417, guid: 5d04bb2dfc1090f4ba70325cdaea0e17,
     type: 3}
@@ -5547,6 +5548,7 @@ GameObject:
   m_Component:
   - component: {fileID: 6005820513473808461}
   - component: {fileID: 7303749794155767521}
+  - component: {fileID: 7117920695189774437}
   m_Layer: 13
   m_Name: DeathBody
   m_TagString: Untagged
@@ -5563,7 +5565,7 @@ Transform:
   m_GameObject: {fileID: 3661634302704713345}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0.1, y: -0.035, z: 0}
+  m_LocalPosition: {x: 0.55, y: 1.05, z: 0}
   m_LocalScale: {x: 0.77, y: 0.644, z: 0.7}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -5610,17 +5612,38 @@ SpriteRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
-  m_Sprite: {fileID: 21300000, guid: 57209f8d2b3b3f249a25f132c387282f, type: 3}
-  m_Color: {r: 0.5849056, g: 0.5849056, b: 0.5849056, a: 1}
+  m_Sprite: {fileID: 21300000, guid: 52b0e0dbd773d624cb744dae1fbf26bd, type: 3}
+  m_Color: {r: 1, g: 1, b: 1, a: 0.5019608}
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0
-  m_Size: {x: 1, y: 2}
+  m_Size: {x: 5.12, y: 10.24}
   m_AdaptiveModeThreshold: 0.5
   m_SpriteTileMode: 0
-  m_WasSpriteAssigned: 0
+  m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
+--- !u!95 &7117920695189774437
+Animator:
+  serializedVersion: 5
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3661634302704713345}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: bc1d2e9281f5cf64ca230c2d6f0eb98a, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_StabilizeFeet: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorStateOnDisable: 0
+  m_WriteDefaultValuesOnDisable: 0
 --- !u!1 &3893428253577857879
 GameObject:
   m_ObjectHideFlags: 0

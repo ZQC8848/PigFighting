@@ -216,7 +216,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   weaponsName: fish
-  firstFuncCoolTime: 0.5
+  firstFuncCoolTime: 0.3
   secondFuncCoolTime: 1
   weaponGameObject: {fileID: 5111035503095891310}
   offset: 15

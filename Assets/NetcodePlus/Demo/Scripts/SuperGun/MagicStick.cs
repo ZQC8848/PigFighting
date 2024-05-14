@@ -71,6 +71,7 @@ public class MagicStick : Weapons
             MagicSkill _magicSkill = skill.GetComponent<MagicSkill>();
             _magicSkill.targetTransform = playerTransform;
             _magicSkill.damageValue = skillDamage;
+            _magicSkill.ownerPlayerId = gunPlayer.PlayerID;
             AudioSystem.Get().PlaySound("À×»÷");
         }
 

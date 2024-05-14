@@ -16,6 +16,7 @@ public class AudioSystem : MonoBehaviour
     private void Start()
     {
         instance = this;
+        PlaySound("准备房间",true);
     }
     static public AudioSystem Get()
     {
