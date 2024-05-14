@@ -57,7 +57,7 @@ public class Fish : Weapons
     public override void SecondFunc()
     {
         
-        GameObject skill = Instantiate(fishSkill, firePoint.position + new Vector3(gunFacing *  35,0,0), firePoint.rotation, bulletPool);
+        GameObject skill = Instantiate(fishSkill, firePoint.position + new Vector3(gunFacing *  35,2,0), firePoint.rotation, bulletPool);
         skill.transform.localScale = new Vector3(gunFacing * skill.transform.localScale.x, skill.transform.localScale.y, 1);
         FishSkill _fishSkill = skill.GetComponent<FishSkill>();
         _fishSkill.skillMentainTime = skillMentainTime;

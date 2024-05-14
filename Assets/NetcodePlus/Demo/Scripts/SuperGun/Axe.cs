@@ -22,6 +22,7 @@ public class Axe : Weapons
     public Transform firePoint;
     public Transform bulletPool;
     public float damageValue;
+    public float skillDamageValue;
     private float height = 5f; // 抛物线的最高点相对起点的高度
     public float heightMultiply;
     private float duration = 3f; // 到达目标所需的时间
@@ -119,7 +120,7 @@ public class Axe : Weapons
         {
             GameObject bullet = Instantiate(axeSkill, firePoint.position, firePoint.rotation, bulletPool);
             AxeSkill_2 _axeSkill = bullet.GetComponent<AxeSkill_2>();
-            _axeSkill.child.damageValue = damageValue/5*3;
+            _axeSkill.child.damageValue = skillDamageValue;
             _axeSkill.child.player = gunPlayer;
             _axeSkill.playerTransform = gunPlayer.transform;
             _axeSkill.existDuration = skillExsitDuration;

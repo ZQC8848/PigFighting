@@ -174,7 +174,7 @@ MonoBehaviour:
   bulletPool: {fileID: 0}
   redBulletSpeed: 20
   greenBulletSpeed: 35
-  redBulletDamage: 1
+  redBulletDamage: 2
   greenBulletDamage: 5
   redBulletImpactForce: 30
   greenBulletImpactForce: 60

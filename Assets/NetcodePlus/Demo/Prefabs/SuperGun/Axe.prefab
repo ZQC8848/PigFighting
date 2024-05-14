@@ -141,7 +141,8 @@ MonoBehaviour:
   maxWeaponCount: 12
   firePoint: {fileID: 4064809889139102573}
   bulletPool: {fileID: 0}
-  damageValue: 20
+  damageValue: 30
+  skillDamageValue: 10
   heightMultiply: 0.5
   durationMultiply: 0.02
   skillExsitDuration: 5

@@ -179,7 +179,7 @@ MonoBehaviour:
   Y_range: 2
   moveTime: 1
   gunPlayer: {fileID: 0}
-  skillDamage: 50
+  skillDamage: 40
   searchRadius: 25
 --- !u!1 &8304348760929794884
 GameObject:
