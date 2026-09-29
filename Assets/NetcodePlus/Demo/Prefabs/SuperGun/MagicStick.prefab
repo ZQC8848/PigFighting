@@ -170,6 +170,8 @@ MonoBehaviour:
     type: 3}
   magicSkill: {fileID: 3166183378062105067, guid: 23d69f166bc69534790ca4119cdcea09,
     type: 3}
+  magicBulletAndroid: {fileID: 3518617814632203656, guid: 2cfcdad15c71f34478c82609b1f9cb66,
+    type: 3}
   maxWeaponCount: 10
   bulletDamage: 10
   firePoint: {fileID: 6706505429580904946}

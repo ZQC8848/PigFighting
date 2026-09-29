@@ -11,7 +11,7 @@ public class MagicStick : Weapons
 
     public GameObject magicBullet;
     public GameObject magicSkill;
-
+    public GameObject magicBulletAndroid;
     [Header("Bullet Count")]
     public int maxWeaponCount;
     private int weaponCount;
@@ -42,18 +42,35 @@ public class MagicStick : Weapons
         weaponCount--;
         Random.InitState(weaponCount);
         AudioSystem.Get().PlaySound("∑®’»");
-
-        for(int i = 0;i<7;i++)
+        if(Application.platform == RuntimePlatform.Android || Application.platform == RuntimePlatform.WindowsEditor)
         {
-            GameObject bullet = Instantiate(magicBullet, firePoint.position, firePoint.rotation, bulletPool);
-            float x = gunFacing * (maxX_distance - (maxX_distance - minX_distance) / 7 * Mathf.Abs(7/2 - i))* Random.Range(1,1.5f);
-            float y = (7f / 2 - i) * Y_range* Random.Range(1, 1.5f);
-            bullet.transform.DOLocalMove(firePoint.position + new Vector3(x,y,0),moveTime);
+            for (int i = 0; i < 7; i++)
+            {
+                GameObject bullet = Instantiate(magicBulletAndroid, firePoint.position, firePoint.rotation, bulletPool);
+                float x = gunFacing * (maxX_distance - (maxX_distance - minX_distance) / 7 * Mathf.Abs(7 / 2 - i)) * Random.Range(1, 1.5f);
+                float y = (7f / 2 - i) * Y_range * Random.Range(1, 1.5f);
+                bullet.transform.DOLocalMove(firePoint.position + new Vector3(x, y, 0), moveTime);
 
-            MagicBullet _bullet = bullet.GetComponent<MagicBullet>();
-            _bullet.SetDamage(bulletDamage);
-            _bullet.SetOwnerPlayerId(gunPlayer.PlayerID);
+                MagicBullet _bullet = bullet.GetComponent<MagicBullet>();
+                _bullet.SetDamage(bulletDamage);
+                _bullet.SetOwnerPlayerId(gunPlayer.PlayerID);
+            }
         }
+        else
+        {
+            for (int i = 0; i < 7; i++)
+            {
+                GameObject bullet = Instantiate(magicBullet, firePoint.position, firePoint.rotation, bulletPool);
+                float x = gunFacing * (maxX_distance - (maxX_distance - minX_distance) / 7 * Mathf.Abs(7 / 2 - i)) * Random.Range(1, 1.5f);
+                float y = (7f / 2 - i) * Y_range * Random.Range(1, 1.5f);
+                bullet.transform.DOLocalMove(firePoint.position + new Vector3(x, y, 0), moveTime);
+
+                MagicBullet _bullet = bullet.GetComponent<MagicBullet>();
+                _bullet.SetDamage(bulletDamage);
+                _bullet.SetOwnerPlayerId(gunPlayer.PlayerID);
+            }
+        }
+
         if (weaponCount <= 0)
         {
             gunPlayer.EquipWeapon("pistol");

@@ -2,19 +2,22 @@ using NetcodePlus.Demo;
 using Suriyun.MCS;
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
+using UnityEngine.UI;
+using UnityEngine.UIElements;
 
 public class TouchControlManager : MonoBehaviour
 {
     [Header("Android Button")]
-    public AnalogStick analogStick;
-    public UniversalButton attackButton;
-    public UniversalButton skillButton;
-    public UniversalButton jumpButton;
-    public UniversalButton rushButton;
+    public FixedJoystick joystick;
+    public ButtonPressHandler attackButton;
+    public ButtonPressHandler skillButton;
+    public ButtonPressHandler jumpButton;
+    public ButtonPressHandler rushButton;
 
     public bool usingAndroidPlantform = true;
-
+    public GameObject PCUI;
     public PlayerControl2D playerControl;
 
     public static TouchControlManager instance;
@@ -27,28 +30,31 @@ public class TouchControlManager : MonoBehaviour
     }
     public void InitControlObject()
     {
-        if (Application.platform == RuntimePlatform.WindowsPlayer )
+        if (Application.platform == RuntimePlatform.WindowsPlayer)
         {
             usingAndroidPlantform = false;
             this.gameObject.SetActive(false);
+            PCUI.gameObject.SetActive(true);
         }
-        else if(Application.platform == RuntimePlatform.WindowsEditor)
-        {
-            usingAndroidPlantform = false;
-            this.gameObject.SetActive(false);
-        }
-        else if( Application.platform == RuntimePlatform.Android)
+        else if (Application.platform == RuntimePlatform.WindowsEditor)
         {
             usingAndroidPlantform = true;
             this.gameObject.SetActive(true);
+        }
+        else if (Application.platform == RuntimePlatform.Android)
+        {
+            usingAndroidPlantform = true;
+            this.gameObject.SetActive(true);
+            PCUI.gameObject.SetActive(false);
         }
     }
 
     void Update()
     {
-        if (analogStick == null || attackButton == null || skillButton == null || jumpButton == null)
+
+        if (joystick == null || attackButton == null || skillButton == null || jumpButton == null)
         {
-            Debug.Log("analogStick" + analogStick.gameObject.name);
+            Debug.Log("analogStick" + joystick.gameObject.name);
             Debug.Log("attackButton" + attackButton.gameObject.name);
             Debug.Log("skillButton" + skillButton.gameObject.name);
             Debug.Log("jumpButton" + jumpButton.gameObject.name);
@@ -67,39 +73,32 @@ public class TouchControlManager : MonoBehaviour
             playerControl.adAttack = false;
             playerControl.adSkill = false;
             playerControl.adRush = false;
+            playerControl.adFall = false;
 
-            if (analogStick.horizontal >= 0.1)
+            if (joystick.Horizontal >= 0.1)
                 playerControl.adRightMove = true;
 
-            if (analogStick.horizontal <= -0.1)
+            if (joystick.Horizontal <= -0.1)
                 playerControl.adLeftMove = true;
 
-            if (analogStick.vertical <= -0.5 && jumpButton.isFingerDown)
+            if (joystick.Vertical < -0.5 && jumpButton.isButtonPressed)
+            {
                 playerControl.adFall = true;
+            }
 
-            if (attackButton.isFingerDown)
+            if (attackButton.isButtonPressed)
                 playerControl.adAttack = true;
 
-            if (skillButton.isFingerDown)
+            if (skillButton.isButtonPressed)
                 playerControl.adSkill = true;
 
-            if (jumpButton.isFingerDown && analogStick.vertical > -0.5)
+
+            if (jumpButton.isButtonPressed && joystick.Vertical > -0.5)
                 playerControl.adJump = true;
 
-            if(rushButton.isFingerDown)
+            if (rushButton.isButtonPressed)
             {
-
                 playerControl.adRush = true;
-
-                if(rushButton.direction.magnitude > 0.3)
-                {
-                    playerControl.adRushDir = rushButton.direction;
-                }
-                else
-                {
-                    playerControl.adRushDir = Vector3.zero;
-                }
-                
             }
         }
     }

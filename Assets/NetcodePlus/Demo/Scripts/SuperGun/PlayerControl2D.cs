@@ -1,6 +1,7 @@
 using Suriyun.MCS;
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 
 namespace NetcodePlus.Demo
@@ -22,7 +23,7 @@ namespace NetcodePlus.Demo
         [Header("Rush")]
         public KeyCode rush_key = KeyCode.L;
         public Vector2 rushDir;
-
+        public Joystick joyStick;
         [Header("Camera")]
         public KeyCode cam_rotate_left = KeyCode.Q;
         public KeyCode cam_rotate_right = KeyCode.E;
@@ -43,12 +44,11 @@ namespace NetcodePlus.Demo
         public Vector3 adRushDir;
 
         private Vector3 move;
-        private float rotate_cam;
-        private float mouse_scroll = 0f;
 
         private bool press_2ndfunc;
         private bool press_1stfunc;
-        private bool press_jump;
+        [Header("jump")]
+        public bool press_jump;
         private bool press_fall;
         private bool press_rush;
 
@@ -69,7 +69,6 @@ namespace NetcodePlus.Demo
         {
 
             move = Vector3.zero;
-            rotate_cam = 0f;
             press_2ndfunc = false;
             press_1stfunc = false;
             press_jump = false;
@@ -88,27 +87,24 @@ namespace NetcodePlus.Demo
 
             if (Input.GetKey(KeyCode.A)||adLeftMove)
             {
+                
                 wasd -= Vector3.right;
                 adLeftMove = false;
             }
-                
             if (Input.GetKey(KeyCode.D)||adRightMove)
             {
+               
                 wasd += Vector3.right;
                 adRightMove = false;
             }
-
-            if (Input.GetKey(cam_rotate_left))
-                rotate_cam += -1f;
-            if (Input.GetKey(cam_rotate_right))
-                rotate_cam += 1f;
-
+            move = wasd.normalized;
             if (Input.GetKey(func2nd_key)||adSkill)
                 press_2ndfunc = true;
             if (Input.GetKey(func1st_key)||adAttack)
                 press_1stfunc = true;
             if (Input.GetKeyDown(jump_key)||adJump|| Input.GetKeyDown(KeyCode.Space))
             {
+                Debug.Log("pressjump");
                 press_jump = true;
                 //adJump = false;
             }
@@ -117,7 +113,27 @@ namespace NetcodePlus.Demo
                 press_fall = true;
                 //adFall = false;
             }
-            if(Input.GetKeyDown(rush_key) || adRush)
+            if (joyStick == null)
+            {
+                joyStick = GameObject.Find("Mobile Controller").transform.GetChild(0).Find("Fixed Joystick").GetComponent<Joystick>();
+            }
+
+            if (new Vector2(joyStick.Horizontal, joyStick.Vertical).magnitude < 0.1f)
+            {
+                rushDir = new Vector2(0, 0);
+            }
+            else
+            {
+                rushDir = new Vector2(joyStick.Horizontal, joyStick.Vertical).normalized;//存储冲刺方向安卓
+            }
+
+            
+            if(adRush)
+            {
+                press_rush = true;
+            }
+
+            if(Input.GetKeyDown(rush_key) )
             {
                 // 获取冲刺方向，根据键盘输入和移动方向确定
                 rushDir = Vector2.zero;
@@ -125,11 +141,11 @@ namespace NetcodePlus.Demo
 
                 if (Input.GetKeyDown(rush_key))
                 {
-                    if (Input.GetKey(KeyCode.D) || adRightMove)
+                    if (Input.GetKey(KeyCode.D) )
                     {
                         rushDir += Vector2.right;
                     }
-                    if (Input.GetKey(KeyCode.A) || adLeftMove)
+                    if (Input.GetKey(KeyCode.A))
                     {
                         rushDir += Vector2.left;
                     }
@@ -142,14 +158,8 @@ namespace NetcodePlus.Demo
                         rushDir += Vector2.down;
                     }
                 }
-                if (adRush)
-                {
-                    rushDir = adRushDir;
-                }
-
                 // 归一化冲刺方向
                 rushDir = rushDir.normalized;
-
                // Debug.Log("control Rushforce " + rushDir);
             }
 
@@ -161,9 +171,10 @@ namespace NetcodePlus.Demo
                 press_pause = true;
 
 
-            move = wasd;
-            move = move.normalized * Mathf.Min(move.magnitude, 1f);
-            mouse_scroll = Input.mouseScrollDelta.y;
+            
+            //DEBUGMESSAGE.Get().AddDebugMessage("moveValue" + move);
+            
+            //move = move.normalized * Mathf.Min(move.magnitude, 1f);
         }
         public void SetJumpDown()
         {
@@ -171,7 +182,6 @@ namespace NetcodePlus.Demo
         }
         public Vector3 GetMove() { return move; }
         public bool IsMoving() { return move.magnitude > 0.1f; }
-        public float GetRotateCam() { return rotate_cam; }
 
         public bool IsPress1stFunc() { return press_1stfunc; }
         public bool IsPress2ndFunc() { return press_2ndfunc; }
@@ -183,16 +193,6 @@ namespace NetcodePlus.Demo
         public bool IsPressMenuAccept() { return press_accept; }
         public bool IsPressMenuCancel() { return press_cancel; }
         public bool IsPressPause() { return press_pause; }
-
-        public float GetMouseScroll()
-        {
-            return mouse_scroll;
-        }
-
-        public bool IsPressedByName(string name)
-        {
-            return Input.GetKeyDown(name);
-        }
 
         public static PlayerControl2D Get()
         {

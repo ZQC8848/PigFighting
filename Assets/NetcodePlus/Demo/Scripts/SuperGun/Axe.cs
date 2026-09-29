@@ -13,6 +13,7 @@ public class Axe : Weapons
     [Header("Bullet Prefab")]
     public GameObject axeBullet;
     public GameObject axeSkill;
+    public GameObject axeBulletAndroid;
 
     [Header("Bullet Count")]
     public int maxWeaponCount;
@@ -116,16 +117,33 @@ public class Axe : Weapons
     {
         weaponCount-=maxWeaponCount;
         AudioSystem.Get().PlaySound("¸«Í·Ðý×ª");
-        for (int i = 0; i < 12; i++)
+        if(Application.platform == RuntimePlatform.Android || Application.platform == RuntimePlatform.WindowsEditor)
         {
-            GameObject bullet = Instantiate(axeSkill, firePoint.position, firePoint.rotation, bulletPool);
-            AxeSkill_2 _axeSkill = bullet.GetComponent<AxeSkill_2>();
-            _axeSkill.child.damageValue = skillDamageValue;
-            _axeSkill.child.player = gunPlayer;
-            _axeSkill.playerTransform = gunPlayer.transform;
-            _axeSkill.existDuration = skillExsitDuration;
-            _axeSkill.angle += MathF.PI/6*i;
+            for (int i = 0; i < 12; i++)
+            {
+                GameObject bullet = Instantiate(axeBulletAndroid, firePoint.position, firePoint.rotation, bulletPool);
+                AxeSkill_2 _axeSkill = bullet.GetComponent<AxeSkill_2>();
+                _axeSkill.child.damageValue = skillDamageValue;
+                _axeSkill.child.player = gunPlayer;
+                _axeSkill.playerTransform = gunPlayer.transform;
+                _axeSkill.existDuration = skillExsitDuration;
+                _axeSkill.angle += MathF.PI / 6 * i;
+            }
         }
+        else
+        {
+            for (int i = 0; i < 12; i++)
+            {
+                GameObject bullet = Instantiate(axeSkill, firePoint.position, firePoint.rotation, bulletPool);
+                AxeSkill_2 _axeSkill = bullet.GetComponent<AxeSkill_2>();
+                _axeSkill.child.damageValue = skillDamageValue;
+                _axeSkill.child.player = gunPlayer;
+                _axeSkill.playerTransform = gunPlayer.transform;
+                _axeSkill.existDuration = skillExsitDuration;
+                _axeSkill.angle += MathF.PI / 6 * i;
+            }
+        }
+
         if( weaponCount <=0 ) {
             gunPlayer.EquipWeapon("pistol");
         }

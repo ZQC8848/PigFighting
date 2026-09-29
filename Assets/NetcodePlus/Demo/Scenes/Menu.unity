@@ -3387,7 +3387,7 @@ CanvasGroup:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 554590907}
   m_Enabled: 1
-  m_Alpha: 0
+  m_Alpha: 1
   m_Interactable: 1
   m_BlocksRaycasts: 1
   m_IgnoreParentGroups: 0
@@ -5239,6 +5239,7 @@ MonoBehaviour:
   fall_key: 115
   rush_key: 108
   rushDir: {x: 0, y: 0}
+  joyStick: {fileID: 0}
   cam_rotate_left: 113
   cam_rotate_right: 101
   menu_accept: 13
@@ -5252,6 +5253,7 @@ MonoBehaviour:
   adSkill: 0
   adRush: 0
   adRushDir: {x: 0, y: 0, z: 0}
+  press_jump: 0
 --- !u!1 &1261294927
 GameObject:
   m_ObjectHideFlags: 0

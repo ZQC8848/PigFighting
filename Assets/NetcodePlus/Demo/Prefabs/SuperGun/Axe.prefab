@@ -138,6 +138,8 @@ MonoBehaviour:
     type: 3}
   axeSkill: {fileID: 6290995258346110404, guid: b07ff917f0cfa1941bbd60a95ab7b0cd,
     type: 3}
+  axeBulletAndroid: {fileID: 6290995258346110404, guid: f2e6641befdfc0949983a3269a4360f2,
+    type: 3}
   maxWeaponCount: 12
   firePoint: {fileID: 4064809889139102573}
   bulletPool: {fileID: 0}

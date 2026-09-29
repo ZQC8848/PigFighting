@@ -14,9 +14,12 @@ namespace NetcodePlus.Demo
 {
     public class SuperGunPlayer : SNetworkPlayer
     {
+        [Header("ObserveAndroid")]
+        public bool isJumpAndroid;
         [Header("PlayerState")]
         public float move_speed = 2f;
         private float jump_force = 15*1.5f;
+        private float jumptime = 0.2f;
         public int maxJumpCount = 2;
         public float hp_max = 100;
         public float hp;
@@ -46,6 +49,7 @@ namespace NetcodePlus.Demo
         public float firstFunc_timer = 0;
         public float secondFunc_timer = 0;
         public float rush_timer = 0;
+        public float jump_timer = 0;
 
         [Header("Other Setting")]
         public LayerMask groundLayer;
@@ -56,11 +60,6 @@ namespace NetcodePlus.Demo
 
         [Header("Player Force")]
         public Vector3 playerForce;
-
-        [Header("RushButton")]
-        public UniversalButton rushButton;
-        public RectTransform poinerTrans;
-        public RectTransform amierTrans;
 
         [Header("SpawnPoint")]
         public Transform SpawnPoint;
@@ -158,12 +157,6 @@ namespace NetcodePlus.Demo
             {
                 Destroy(playerCamera.gameObject);
             }
-            else if (Application.platform == RuntimePlatform.Android)
-            {
-                rushButton = GameObject.Find("Skill0").GetComponent<UniversalButton>();
-                amierTrans = rushButton.aimer.GetComponent<RectTransform>();
-                poinerTrans = rushButton.pointer.GetComponent<RectTransform>();
-            }
 
             if (IsOwner)
             {
@@ -178,6 +171,7 @@ namespace NetcodePlus.Demo
             firstFunc_timer += Time.deltaTime;
             secondFunc_timer += Time.deltaTime;
             rush_timer += Time.deltaTime;
+            jump_timer += Time.deltaTime;
             if (Input.GetKeyDown(KeyCode.T))
             {
                 Debug.Log(weaponHandler.transform.position);
@@ -214,18 +208,7 @@ namespace NetcodePlus.Demo
             bool isFallPressed = controls.IsPressFall();
             bool isRushPressed = controls.IsPressRush();
 
-            if (Application.platform == RuntimePlatform.Android)
-            {
-                rushDir = (Vector2)TouchControlManager.instance.rushButton.direction;
-            }
-            else if (Application.platform == RuntimePlatform.WindowsEditor)
-            {
-                rushDir = controls.rushDir;
-            }
-            else if (Application.platform == RuntimePlatform.WindowsPlayer)
-            {
-                rushDir = controls.rushDir;
-            }
+            rushDir = controls.rushDir;
 
             Vector3 move = new Vector3(cmove.x * move_speed, rigid.velocity.y, 0);
             animator.SetFloat("velocityY", rigid.velocity.y);
@@ -238,6 +221,7 @@ namespace NetcodePlus.Demo
             //Move
             Turn(cmove.x);
             Move(move);
+            isJumpAndroid = isJumpPressed;
             Jump(isJumpPressed);
             Fall(isFallPressed);
             Rush(isRushPressed);
@@ -391,7 +375,10 @@ namespace NetcodePlus.Demo
         }
         private void Jump(bool isJumpPressed)
         {
+            if (jump_timer < jumptime)
+                return;
 
+            Debug.Log("Player Is jumping");
             bool isOnGround = IsOnGroundCheck();
 
             if (isOnGround)
@@ -400,12 +387,14 @@ namespace NetcodePlus.Demo
 
             if (isJumpPressed && isOnGround)
             {
-                //Debug.Log("try to jump");
+
+                Debug.Log("jump on ground");
                 actions?.Trigger("jump");
                 currentJumpCount--;
             }
             else if (isJumpPressed && currentJumpCount > 0 && !isOnGround)
             {
+                Debug.Log("jump in air");
                 actions?.Trigger("jump");
                 currentJumpCount--;
             }
@@ -415,6 +404,7 @@ namespace NetcodePlus.Demo
             animator.SetBool("jump", true);
             rigid.velocity = new Vector3(rigid.velocity.x, jump_force);
             AudioSystem.Get().PlaySound("Ò»¶ÎÌø");
+            jump_timer = 0;
         }
 
         private void Fall(bool isFallPressed)
@@ -593,20 +583,10 @@ namespace NetcodePlus.Demo
             if (isRushPressed && rush_timer > rushTimeCoolDown)
             {
 
-                if (rushDir == Vector3.zero && (Application.platform == RuntimePlatform.WindowsPlayer || Application.platform == RuntimePlatform.WindowsEditor))
+                if (rushDir == Vector3.zero )
                 {
                     rushDir = new Vector2(GetUserFacing(), 0);
                     actions?.Trigger("rush", rushDir);
-                    return;
-                }
-                else if (Application.platform == RuntimePlatform.Android)
-                {
-                    rushDir = (poinerTrans.position - amierTrans.position);
-                    Debug.Log("get button: " + rushDir);
-                    if (rushDir.magnitude > 0.8f)
-                    {
-                        actions?.Trigger("rush", rushDir);
-                    }
                     return;
                 }
                 actions?.Trigger("rush", rushDir);
